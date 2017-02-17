@@ -1,5 +1,11 @@
 {
   "devDependencies": {
+    "@types/jquery": "^2.0.40",
+    "@types/knockout": "^3.4.39",
+    "@types/q": "0.0.32",
+    "@types/react": "^15.0.10",
+    "@types/react-dom": "^0.14.23",
+    "@types/requirejs": "^2.1.28",
     "chai": "^3.5.0",
     "grunt": "^1.0.1",
     "grunt-cli": "^1.2.0",
@@ -20,7 +26,7 @@
     "typings": "^1.5.0",
     "vss-web-extension-sdk": "^1.106.0"
   },
-  "name": "vsts-extension-ts-seed-simple",
+  "name": "customize-team-form",
   "private": true,
   "version": "0.6.0",
   "scripts": {

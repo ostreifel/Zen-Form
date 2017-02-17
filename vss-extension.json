@@ -1,13 +1,13 @@
 {
     "manifestVersion": 1,
-    "id": "vsts-extension-ts-seed-simple",
-    "version": "0.1.1",
-    "name": "vsts-extension-ts-seed-simple",
+    "id": "customize-team-form",
+    "version": "0.1.3",
+    "name": "Customize Team Form",
     "scopes": [ "vso.work", "vso.work_write" ],
-    "description": "Describe your extension.",
-    "publisher": "your-publisher",
+    "description": "Create team specific form customizations.",
+    "publisher": "ottostreifel",
     "icons": {
-        "default": "img/logo.png"
+        "default": "img/logo.svg"
     },
     "targets": [
         {
@@ -20,26 +20,6 @@
     "content": {
         "details": {
             "path": "details.md"
-        }
-    },
-    "links": {
-        "home": {
-            "uri": "https://bit.ly"
-        },
-        "getstarted": {
-            "uri": "https://bit.ly"
-        },
-        "learn": {
-            "uri": "https://bit.ly"
-        },
-        "support": {
-            "uri": "https://bit.ly"
-        },
-        "repository": {
-            "uri": "https://bit.ly"
-        },
-        "issues": {
-            "uri": "https://bit.ly"
         }
     },
     "branding": {
