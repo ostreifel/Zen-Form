@@ -8,9 +8,5 @@
         "./scripts/**/*.ts",
         "!**/*.tests.ts",
         "./typings/index.d.ts"
-    ],
-    "files": [
-        "scripts/page.ts",
-        "typings/index.d.ts"
     ]
 }
