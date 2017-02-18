@@ -10,8 +10,7 @@
         "./typings/index.d.ts"
     ],
     "files": [
-        "scripts/app.ts",
-        "scripts/logic/messageHelper.ts",
+        "scripts/page.ts",
         "typings/index.d.ts"
     ]
 }
