@@ -6,6 +6,7 @@ const clean = require("gulp-clean");
 const yargs = require("yargs");
 const exec = require('child_process').exec;
 const rename = require('gulp-rename');
+const sass = require('gulp-sass');
 
 const args =  yargs.argv;
 
@@ -28,7 +29,11 @@ gulp.task('fix-vss', () => {
 });
 
 gulp.task('build', ['fix-vss', 'clean'], () => {
-    var tsResult = gulp.src(['scripts/**/*.tsx', 'scripts/**/*.ts'])
+    gulp.src('sass/**/*.scss')
+        .pipe(sass())
+        .pipe(gulp.dest(`${contentFolder}/css`));
+
+    const tsResult = gulp.src(['scripts/**/*.tsx', 'scripts/**/*.ts'])
         .pipe(tsProject());
 
     return tsResult.js.pipe(gulp.dest(jsFolder));
@@ -42,7 +47,6 @@ gulp.task('copy', ['build'], () => {
 
     return gulp.src([
         'node_modules/office-ui-fabric-react/dist/*css/*.min.css',
-        '*css/**/*.css',
         'html/**/*html',
         '*.md',
         ])

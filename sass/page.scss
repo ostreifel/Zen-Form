@@ -1,0 +1,12 @@
+.page-form {
+    margin: 0px 10px;
+    .page-column {
+        .page-group {
+            .page-control {
+                input[type=text] {
+                    max-width: 600px;
+                }
+            }
+        }
+    }
+}

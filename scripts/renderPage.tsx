@@ -37,7 +37,7 @@ class PageControl extends React.Component<{
         const fieldType = this.props.definitions[referenceName].type;
         switch(fieldType) {
             case FieldType.String:
-            return <TextField className="control-value" value={this.props.values[referenceName] as string} />;
+            return <TextField className="control-value" id={id} value={this.props.values[referenceName] as string} />;
             default:
             return <div className="control-value" id={id}>{`Unable to render field type ${FieldType[fieldType]}`}</div>;
         }
@@ -75,7 +75,7 @@ class PageColumn extends React.Component<{
                 definitions={this.props.definitions}
                 values={this.props.values} />);
         return (
-            <div className="page-group">
+            <div className="page-column">
                 {groups}
             </div>
         );
