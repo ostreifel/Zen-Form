@@ -12,23 +12,22 @@ const args =  yargs.argv;
 const entryPoints = ['registerPage'];
 const jsFolder = 'js';
 const contentFolder = 'dist';
-const vsixFolder = 'vsix'
 
 const tsProject = ts.createProject('tsconfig.json', {
     typescript: require('typescript')
 });
 gulp.task('clean', () => {
-    gulp.src([contentFolder, jsFolder, vsixFolder])
+    return gulp.src([contentFolder, jsFolder, '*.vsix'])
         .pipe(clean());
 })
 
 gulp.task('fix-vss', () => {
     // These duplicate type files mess up the build
-    gulp.src([`node_modules/vss-web-extension-sdk/node_modules`], {read: false})
+    return gulp.src([`node_modules/vss-web-extension-sdk/node_modules`], {read: false})
         .pipe(clean());
 });
 
-gulp.task('build', ['fix-vss'], () => {
+gulp.task('build', ['fix-vss', 'clean'], () => {
     var tsResult = gulp.src(['scripts/**/*.tsx', 'scripts/**/*.ts'])
         .pipe(tsProject());
 
@@ -46,7 +45,6 @@ gulp.task('copy', ['build'], () => {
         '*css/**/*.css',
         'html/**/*html',
         '*.md',
-        'vss-extension.json',
         ])
         .pipe(gulp.dest(contentFolder));
 });
@@ -65,16 +63,18 @@ gulp.task('webpack', ['copy'], () => {
 
 gulp.task('package', ['webpack'], () => {
     const overrides = {}
-    if (yargs.argv.dev) {
+    if (yargs.argv.release) {
+        overrides.public = true;
+    } else {
         const manifest = require('./vss-extension.json');
         overrides.name = manifest.name + ": Development Edition";
         overrides.id = manifest.id + "-dev";
     }
     const overridesArg = `--override "${JSON.stringify(overrides).replace(/"/g, '\\"')}"`;
     const rootArg = `--root ${contentFolder}`;
-    const outputPathArg = `--output-path ${vsixFolder}`;
+    const manifestsArg = `--manifests ..\\vss-extension.json`;
 
-    exec(`${path.join(__dirname, "node_modules", ".bin", "tfx.cmd")} extension create ${rootArg} ${outputPathArg} ${overridesArg} --rev-version`,
+    exec(`${path.join(__dirname, "node_modules", ".bin", "tfx.cmd")} extension create ${rootArg} ${overridesArg} ${manifestsArg} --rev-version`,
         (err, stdout, stderr) => {
             if (err) {
                 console.log(err);
@@ -82,8 +82,9 @@ gulp.task('package', ['webpack'], () => {
 
             console.log(stdout);
             console.log(stderr);
+            
         });
 
 });
 
-gulp.task('default', ['clean', 'package']);
+gulp.task('default', ['package']);

@@ -1,13 +1,13 @@
 {
     "manifestVersion": 1,
     "id": "customize-team-form",
-    "version": "0.1.20",
+    "version": "0.1.27",
     "name": "Customize Team Form",
     "scopes": [ "vso.work", "vso.work_write" ],
     "description": "Create team specific form customizations.",
     "publisher": "ottostreifel",
     "icons": {
-        "default": "img/logo.svg"
+        "default": "dist/img/logo.svg"
     },
     "targets": [
         {
@@ -28,15 +28,19 @@
     },
     "files": [
         {
-            "path": "img",
+            "path": "dist/img",
             "addressable": true
         },
         {
-            "path": "scripts",
+            "path": "dist/scripts",
             "addressable": true
         },
         {
-            "path": "page.html",
+            "path": "dist/page.html",
+            "addressable": true
+        },
+        {
+            "path": "dist/css",
             "addressable": true
         }
     ],
