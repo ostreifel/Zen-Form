@@ -24,9 +24,10 @@ class PageControl extends React.Component<{
 
         const control = this.renderControlValue(id);
 
+
         return (
             <div className="page-control">
-                <Label value={this.props.control.label} htmlFor={id} />
+                <Label htmlFor={id} title={this.props.definitions[this.props.control.referenceName].helpText} >{this.props.control.label}</Label>
                 {control}
             </div>
         );
