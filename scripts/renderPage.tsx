@@ -8,7 +8,7 @@ import {
     IFieldDefintions,
     IFieldValues,
 } from "./pageContracts";
-import { WorkItemField, FieldType } from "TFS/WorkItemTracking/Contracts";
+import { FieldType } from "TFS/WorkItemTracking/Contracts";
 import { TextField } from "OfficeFabric/components/TextField/TextField";
 import { Label } from "OfficeFabric/components/Label/Label";
 
@@ -17,30 +17,32 @@ class PageControl extends React.Component<{
     definitions: IFieldDefintions,
     values: IFieldValues
 }, void> {
-    /** Counter to ensure each id is unique */
-    private static counter: number = 0;
     render() {
-        const id = `control_${PageControl.counter++}`;
+        let controlValue: JSX.Element;
 
-        const control = this.renderControlValue(id);
-
+        const referenceName = this.props.control.referenceName;
+        const fieldType = this.props.definitions[referenceName].type;
+        const helpText = this.props.definitions[this.props.control.referenceName].helpText;
+        const labelText = this.props.control.label;
+        switch(fieldType) {
+            case FieldType.String:
+            controlValue = <TextField
+                className="control-value"
+                value={this.props.values[referenceName] as string}
+                label={labelText}
+                title={helpText} />;
+            break;
+            // TODO more field types here
+            default:
+            controlValue = <div className="control-value">{`Unable to render field type ${FieldType[fieldType]}`}</div>;
+            break;
+        }
 
         return (
             <div className="page-control">
-                <Label htmlFor={id} title={this.props.definitions[this.props.control.referenceName].helpText} >{this.props.control.label}</Label>
-                {control}
+                {controlValue}
             </div>
         );
-    }
-    renderControlValue(id: string) {
-        const referenceName = this.props.control.referenceName;
-        const fieldType = this.props.definitions[referenceName].type;
-        switch(fieldType) {
-            case FieldType.String:
-            return <TextField className="control-value" id={id} value={this.props.values[referenceName] as string} />;
-            default:
-            return <div className="control-value" id={id}>{`Unable to render field type ${FieldType[fieldType]}`}</div>;
-        }
     }
 }
 
@@ -57,6 +59,7 @@ class PageGroup extends React.Component<{
                 values={this.props.values} />);
         return (
             <div className="page-group">
+                <Label className="page-group-label">{this.props.group.label}</Label>
                 {controls}
             </div>
         );

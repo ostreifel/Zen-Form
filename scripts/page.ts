@@ -51,11 +51,26 @@ export class Page implements IWorkItemNotificationListener {
         this.service.getFields().then(fields => {});
         const mockForm: IPageForm = { version: "0.1.0", columns:[{
             groups: [{
+                label: "Group1",
                 controls: [{
                     label: "Title Field",
-                    referenceName: "System.Title",
-                }],
-            }],
+                    referenceName: "System.Title"
+                }]
+            }, {
+                label: "Group2",
+                controls: [{
+                    label: "Title Field2",
+                    referenceName: "System.Title"
+                }]
+            }]
+        }, {
+            groups: [{
+                label: "Group3",
+                controls: [{
+                    label: "Title Field3",
+                    referenceName: "System.Title"
+                }]
+            }]
         }]};
         const mockValues: IFieldValues = {
             "System.Title": "Sample Title",
