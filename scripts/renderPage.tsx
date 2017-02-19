@@ -11,6 +11,8 @@ import {
 import { FieldType } from "TFS/WorkItemTracking/Contracts";
 import { TextField } from "OfficeFabric/components/TextField/TextField";
 import { Label } from "OfficeFabric/components/Label/Label";
+import { Button } from "OfficeFabric/components/Button/Button";
+import { PrimaryButton } from "OfficeFabric/components/Button/PrimaryButton/PrimaryButton";
 
 class PageControl extends React.Component<{
     control: IPageControl,
@@ -102,6 +104,7 @@ class PageForm extends React.Component<{
     form: IPageForm;
     definitions: IFieldDefintions;
     values: IFieldValues;
+    onFormUpdated: (form: IPageForm) => void;
 }, void> {
     render() {
         let columns = this.props.form.columns.map( column =>
@@ -112,15 +115,36 @@ class PageForm extends React.Component<{
         );
         return (
             <div className="page-form">
-                {columns}
+                <PageHeader form={this.props.form} onFormUpdated={this.props.onFormUpdated}/>
+                <div className="page-columns">
+                    {columns}
+                </div>
             </div>
         );
     }
 }
 
-export function renderPage(workItemForm: IPageForm, definitions: IFieldDefintions, values: IFieldValues) {
+class PageHeader extends React.Component<{
+    form: IPageForm;
+    onFormUpdated: (form: IPageForm) => void
+}, void> {
+    render() {
+        return (
+            <div className="page-header">
+                <PrimaryButton className="open-dialog-button">{"Customize Page"}</PrimaryButton>
+                <div className="feedback">
+                    <a href={"https://marketplace.visualstudio.com/items?itemName=ottostreifel.customize-team-form"} target={"_blank"}>Review</a>{" | "}
+                    <a href={"https://github.com/ostreifel/zen-form/issues"} target={"_blank"}>Report an issue</a>
+                </div>
+            </div>
+        );
+    }
+}
+
+export function renderPage(workItemForm: IPageForm, definitions: IFieldDefintions, values: IFieldValues, onFormUpdated: (form: IPageForm) => void) {
     ReactDOM.render(<PageForm
         form={workItemForm}
         definitions={definitions}
-        values={values} />, document.getElementById("page-wrapper"));
+        values={values}
+        onFormUpdated={onFormUpdated} />, document.getElementById("page-wrapper"));
 }

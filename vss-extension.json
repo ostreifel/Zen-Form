@@ -1,7 +1,7 @@
 {
     "manifestVersion": 1,
     "id": "customize-team-form",
-    "version": "0.1.44",
+    "version": "0.1.47",
     "name": "Customize Team Form",
     "scopes": [ "vso.work", "vso.work_write" ],
     "description": "Create team specific form customizations.",
@@ -59,6 +59,15 @@
                 "name": "Zen Page",
                 "uri": "page.html"
             } 
+        },
+        {
+            "id": "manage-form",
+            "type": "ms.vss-web.control",
+            "description": "Editor for the form",
+            "targets": [ ],
+            "properties": {
+                "uri": "pageEdit.html"
+            }
         }
     ]
 }
