@@ -32,7 +32,16 @@ class PageControl extends React.Component<{
                 label={labelText}
                 title={helpText} />;
             break;
-            // TODO more field types here
+            /**
+             * TODO more field types here
+             * Types to Support
+             * - Combo String
+             * - identity
+             * - html
+             * - discussion (sort of html)
+             * - number
+             * - boolean
+             */
             default:
             controlValue = <div className="control-value">{`Unable to render field type ${FieldType[fieldType]}`}</div>;
             break;
@@ -52,15 +61,19 @@ class PageGroup extends React.Component<{
     values: IFieldValues
 }, void> {
     render() {
-        let controls = this.props.group.controls.map(control =>
+        const groupElems = this.props.group.controls.map(control =>
             <PageControl 
                 control={control}
                 definitions={this.props.definitions}
                 values={this.props.values} />);
+        if (this.props.group.label) {
+            groupElems.unshift(
+                <Label className="page-group-label">{this.props.group.label}</Label>
+            );
+        }
         return (
             <div className="page-group">
-                <Label className="page-group-label">{this.props.group.label}</Label>
-                {controls}
+                {groupElems}
             </div>
         );
     }
@@ -110,14 +123,4 @@ export function renderPage(workItemForm: IPageForm, definitions: IFieldDefintion
         form={workItemForm}
         definitions={definitions}
         values={values} />, document.getElementById("page-wrapper"));
-    /**
-     * Types to Support
-     * - String
-     * - Combo String
-     * - identity
-     * - html
-     * - discussion (sort of html)
-     * - number
-     * - boolean
-     */
 }

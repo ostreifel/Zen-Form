@@ -9,7 +9,7 @@ export interface IPageColumn {
     groups: IPageGroup[];
 }
 export interface IPageGroup {
-    label: string;
+    label?: string;
     controls: IPageControl[];
 }
 export interface IPageControl {

@@ -1,8 +1,12 @@
 .page-form {
-    margin: 0px 10px;
     .page-column {
+        margin: 0px 10px;
         float: left;
         .page-group {
+            label.page-group-label {
+                border-bottom: 1px solid black;
+                font-weight: bolder;
+            }
             .page-control {
                 input[type=text] {
                     max-width: 600px;
