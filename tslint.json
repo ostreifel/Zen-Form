@@ -23,7 +23,7 @@
         "no-unused-variable": [
             true
         ],
-		"trailing-comma": [true, {"multiline": "always", "singleline": "never"}],
+		"trailing-comma": [true, {"multiline": "never", "singleline": "never"}],
         "variable-name": [true, "ban-keywords"],
         "whitespace": [true,
             "check-branch",
