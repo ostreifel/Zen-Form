@@ -7,6 +7,16 @@
         {
             "type": "node",
             "request": "launch",
+            "name": "Gulp task",
+            "cwd": "${workspaceRoot}",
+            "program": "${workspaceRoot}/node_modules/gulp/bin/gulp.js",
+            "args": [
+                "--dev"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
             "name": "Launch Tests",
             "program": "${workspaceRoot}\\node_modules\\mocha\\bin\\_mocha",
             "cwd": "${workspaceRoot}",

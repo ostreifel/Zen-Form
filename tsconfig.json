@@ -1,12 +1,15 @@
 {
     "compilerOptions": {
         "module": "amd",
+        "moduleResolution": "node",
+        "target": "es5",
+        "noImplicitAny": false,
+        "jsx": "react",
         "sourceMap": false,
-        "rootDir": "./scripts"
-    },
-    "filesGlob": [
-        "./scripts/**/*.ts",
-        "!**/*.tests.ts",
-        "./typings/index.d.ts"
-    ]
+        "baseUrl": ".",
+        "rootDir": "./scripts",
+        "paths": {
+            "OfficeFabric/*": ["node_modules/office-ui-fabric-react/lib-amd/*"]
+        }
+    }
 }

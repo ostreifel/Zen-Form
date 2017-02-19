@@ -1,3 +1,5 @@
+/// <reference types="../node_modules/vss-web-extension-sdk" />
+
 import {
     IWorkItemNotificationListener,
     IWorkItemLoadedArgs,
@@ -10,7 +12,8 @@ import {
 } from "TFS/WorkItemTracking/Services";
 import { getClient } from "TFS/WorkItemTracking/RestClient";
 import { WorkItemType, WorkItemField } from "TFS/WorkItemTracking/Contracts";
-import { IPageForm } from "pageContracts";
+import { IPageForm } from "./pageContracts";
+import { renderPage } from "./renderPage";
 
 export class Page implements IWorkItemNotificationListener {
     public static create(container: JQuery): IPromise<Page> {
@@ -33,7 +36,8 @@ export class Page implements IWorkItemNotificationListener {
     private constructor(readonly container: JQuery) { }
     public onLoaded(workItemLoadedArgs: IWorkItemLoadedArgs): void {
         this.service.getFields().then(fields => {});
-        const mockForm: IPageForm = { fields: ["System.Title", "System.State"]};
+        const mockForm: IPageForm = { version: "0.1.0", fields: ["System.Title", "System.State"]};
+        renderPage(mockForm, {}, {});
     }
     public onFieldChanged(fieldChangedArgs: IWorkItemFieldChangedArgs): void { }
     public onSaved(savedEventArgs: IWorkItemChangedArgs): void { }

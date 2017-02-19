@@ -1,7 +1,7 @@
 {
     "manifestVersion": 1,
     "id": "customize-team-form",
-    "version": "0.1.8",
+    "version": "0.1.20",
     "name": "Customize Team Form",
     "scopes": [ "vso.work", "vso.work_write" ],
     "description": "Create team specific form customizations.",
@@ -32,7 +32,7 @@
             "addressable": true
         },
         {
-            "path": "build",
+            "path": "scripts",
             "addressable": true
         },
         {
@@ -44,18 +44,6 @@
         "Integrate"
     ],
     "contributions": [
-        {
-            "id": "vsts-extension-ts-seed-simple-action",
-            "type": "ms.vss-web.action-provider",
-            "description": "",
-            "targets": [
-                "ms.vss-work-web.work-item-context-menu"
-            ],
-            "properties": {
-                "group": "contributed",
-                "uri": "index.html"
-            }
-        },
         {  
             "id": "form-page",
             "type": "ms.vss-work-web.work-item-form-page",

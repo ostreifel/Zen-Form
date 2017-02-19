@@ -11,11 +11,17 @@
         VSS.init({
             explicitNotifyLoaded: true,
             usePlatformScripts: true,
-            configureModuleLoader: true
+            configureModuleLoader: true,
+            moduleLoaderConfig: {
+                paths: {
+                    "OfficeFabric": "build/node_modules/office-ui-fabric-react/lib-amd",
+                    "@microsoft/load-themed-styles": "node_modules/office-ui-fabric-react/node_modules/@microsoft/load-themed-styles/lib-amd/index"
+                }
+            }
         });
         
         // Load main entry point for extension
-        VSS.require(["build/registerPage"], function () {
+        VSS.require(["scripts/registerPage"], function () {
             // Loading succeeded
             VSS.notifyLoadSucceeded();
         });
