@@ -7,12 +7,27 @@ import {
     IFieldDefinition,
     IFieldDefintions
 } from "./pageContracts";
+import * as React from "react";
+import * as ReactDOM from "react-dom";
 
-console.log("hello in console from editForm.js");
-$("#edit-form-wrapper").html("<div>Hello from editForm.ts</div>");
+const configuration: IEditFormContext = VSS.getConfiguration();
+const form = configuration.form;
 
+
+class PageForm extends React.Component<{}, {a: number}> {
+    render() {
+        return <div>{"Hello from react"}</div>;
+    }
+}
+
+function renderEditPage() {
+    ReactDOM.render(<PageForm/>, document.getElementById("edit-form-wrapper"));
+}
+
+const getForm = () => form;
 const callbacks: IEditFormCallbacks = {
-    getForm: () => {return {description: "form from edit dialog"} as IPageForm;}
+    getForm
 };
+renderEditPage();
 
 VSS.register("edit-form", callbacks);
