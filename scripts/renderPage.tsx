@@ -6,13 +6,14 @@ import {
     IPageGroup,
     IPageControl,
     IFieldDefintions,
-    IFieldValues,
+    IFieldValues
 } from "./pageContracts";
 import { FieldType } from "TFS/WorkItemTracking/Contracts";
+import { openEditFormDialog } from "./openEditFormDialog";
 import { TextField } from "OfficeFabric/components/TextField/TextField";
 import { Label } from "OfficeFabric/components/Label/Label";
-import { Button } from "OfficeFabric/components/Button/Button";
 import { PrimaryButton } from "OfficeFabric/components/Button/PrimaryButton/PrimaryButton";
+
 
 class PageControl extends React.Component<{
     control: IPageControl,
@@ -26,7 +27,7 @@ class PageControl extends React.Component<{
         const fieldType = this.props.definitions[referenceName].type;
         const helpText = this.props.definitions[this.props.control.referenceName].helpText;
         const labelText = this.props.control.label;
-        switch(fieldType) {
+        switch (fieldType) {
             case FieldType.String:
             controlValue = <TextField
                 className="control-value"
@@ -64,7 +65,7 @@ class PageGroup extends React.Component<{
 }, void> {
     render() {
         const groupElems = this.props.group.controls.map(control =>
-            <PageControl 
+            <PageControl
                 control={control}
                 definitions={this.props.definitions}
                 values={this.props.values} />);
@@ -87,7 +88,7 @@ class PageColumn extends React.Component<{
     values: IFieldValues
 }, void> {
     render() {
-        let groups = this.props.column.groups.map(group => 
+        let groups = this.props.column.groups.map(group =>
             <PageGroup
                 group={group}
                 definitions={this.props.definitions}
@@ -131,7 +132,11 @@ class PageHeader extends React.Component<{
     render() {
         return (
             <div className="page-header">
-                <PrimaryButton className="open-dialog-button">{"Customize Page"}</PrimaryButton>
+                <PrimaryButton
+                    className="open-dialog-button"
+                    onClick={() => openEditFormDialog(this.props.form, this.props.onFormUpdated)}>
+                        {"Customize Page"}
+                </PrimaryButton>
                 <div className="feedback">
                     <a href={"https://marketplace.visualstudio.com/items?itemName=ottostreifel.customize-team-form"} target={"_blank"}>Review</a>{" | "}
                     <a href={"https://github.com/ostreifel/zen-form/issues"} target={"_blank"}>Report an issue</a>

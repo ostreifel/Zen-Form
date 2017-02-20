@@ -1,4 +1,4 @@
-import { WorkItemField, FieldType } from "TFS/WorkItemTracking/Contracts";
+import { FieldType } from "TFS/WorkItemTracking/Contracts";
 
 export interface IPageForm {
     /** Form is persisted so it may need to be uppgraded from time to time */

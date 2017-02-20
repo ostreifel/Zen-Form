@@ -4,11 +4,11 @@ import {
     IWorkItemNotificationListener,
     IWorkItemLoadedArgs,
     IWorkItemFieldChangedArgs,
-    IWorkItemChangedArgs,
+    IWorkItemChangedArgs
 } from "TFS/WorkItemTracking/ExtensionContracts";
 import {
     WorkItemFormService,
-    IWorkItemFormService,
+    IWorkItemFormService
 } from "TFS/WorkItemTracking/Services";
 import { getClient } from "TFS/WorkItemTracking/RestClient";
 import { WorkItemType, WorkItemField } from "TFS/WorkItemTracking/Contracts";
@@ -47,9 +47,11 @@ export class Page implements IWorkItemNotificationListener {
             };
         }
     }
+    private onFormChanged(form: IPageForm) {
+    }
     public onLoaded(workItemLoadedArgs: IWorkItemLoadedArgs): void {
         this.service.getFields().then(fields => {});
-        const mockForm: IPageForm = { version: "0.1.0", columns:[{
+        const mockForm: IPageForm = { version: "0.1.0", columns: [{
             groups: [{
                 label: "Group1",
                 controls: [{
@@ -73,9 +75,9 @@ export class Page implements IWorkItemNotificationListener {
             }]
         }]};
         const mockValues: IFieldValues = {
-            "System.Title": "Sample Title",
-        }
-        renderPage(mockForm, this.fieldDefinitions, mockValues);
+            "System.Title": "Sample Title"
+        };
+        renderPage(mockForm, this.fieldDefinitions, mockValues, (form) => this.onFormChanged(form));
     }
     public onFieldChanged(fieldChangedArgs: IWorkItemFieldChangedArgs): void { }
     public onSaved(savedEventArgs: IWorkItemChangedArgs): void { }

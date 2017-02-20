@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    
+    <link href="css/fabric.min.css" rel="stylesheet" />
+    <script src="scripts/VSS.SDK.min.js"></script>
+</head>
+<body>
+    <script type="text/javascript">
+        // Initialize framework 
+        VSS.init({
+            explicitNotifyLoaded: true,
+            usePlatformScripts: true,
+            configureModuleLoader: true
+        });
+        
+        // Load main entry point for extension
+        // VSS.require(["scripts/registerPage"], function () {
+        //     // Loading succeeded
+        //     VSS.notifyLoadSucceeded();
+        // });
+    </script>
+    <div id="edit-form-wrapper"></div>
+</body>
+</html>

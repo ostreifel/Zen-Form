@@ -1,7 +1,7 @@
 {
     "manifestVersion": 1,
     "id": "customize-team-form",
-    "version": "0.1.47",
+    "version": "0.1.51",
     "name": "Customize Team Form",
     "scopes": [ "vso.work", "vso.work_write" ],
     "description": "Create team specific form customizations.",
@@ -61,12 +61,12 @@
             } 
         },
         {
-            "id": "manage-form",
+            "id": "edit-form",
             "type": "ms.vss-web.control",
             "description": "Editor for the form",
             "targets": [ ],
             "properties": {
-                "uri": "pageEdit.html"
+                "uri": "editForm.html"
             }
         }
     ]
