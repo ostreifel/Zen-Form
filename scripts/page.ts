@@ -48,10 +48,11 @@ export class Page implements IWorkItemNotificationListener {
         }
     }
     private onFormChanged(form: IPageForm) {
+        console.log("TODO: update page with new form here", form);
     }
     public onLoaded(workItemLoadedArgs: IWorkItemLoadedArgs): void {
         this.service.getFields().then(fields => {});
-        const mockForm: IPageForm = { version: "0.1.0", columns: [{
+        const mockForm: IPageForm = { version: 1, columns: [{
             groups: [{
                 label: "Group1",
                 controls: [{

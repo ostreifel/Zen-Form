@@ -146,7 +146,10 @@ class PageHeader extends React.Component<{
     }
 }
 
-export function renderPage(workItemForm: IPageForm, definitions: IFieldDefintions, values: IFieldValues, onFormUpdated: (form: IPageForm) => void) {
+export function renderPage(workItemForm: IPageForm,
+                           definitions: IFieldDefintions,
+                           values: IFieldValues,
+                           onFormUpdated: (form: IPageForm) => void) {
     ReactDOM.render(<PageForm
         form={workItemForm}
         definitions={definitions}
