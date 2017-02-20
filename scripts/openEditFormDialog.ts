@@ -13,8 +13,9 @@ export function openEditFormDialog(form: IPageForm, onFormChanged: (form: IPageF
         }
         const dialogOptions: IHostDialogOptions = {
             title: "Edit page form",
-            width: 900,
-            height: 800,
+            // Full screen
+            width: Number.MAX_VALUE,
+            height: Number.MAX_VALUE,
             okText: "Save Form",
             getDialogResult: save,
             resizable: true
