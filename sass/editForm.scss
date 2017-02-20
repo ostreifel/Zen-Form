@@ -3,15 +3,30 @@
         float: left;
         margin: 0 10px;
         button.ms-Button.ms-Button--default {
-            max-width: initial;
+            min-width: initial;
         }
         .column-header {
             label {
                 float: left;
                 margin-right: 10px;
+                margin-bottom: 5px;
             }
             button {
                 float: right;
+            }
+            overflow: hidden;
+        }
+        .group {
+            font-weight: normal;
+            .group-header {
+                .group-label {
+                    float: left;
+                    margin-right: 10px;
+                }
+                button {
+                    float: right;
+                }
+                overflow: hidden;
             }
         }
     }

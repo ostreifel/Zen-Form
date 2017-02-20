@@ -22,7 +22,18 @@ class GroupColumn extends React.Component<{options: IGroupProperties }, void> {
     render() {
         return (
             <div className="group">
-                <TextField className="group-label" value={this.props.options.group.label}/>
+                <div className="group-header">
+                    <TextField className="group-label" value={this.props.options.group.label}/>
+                    <Button
+                        buttonType={ButtonType.hero}
+                        icon="Cancel"
+                        title="Remove group"
+                        onClick={() => {
+                            const opts = this.props.options;
+                            form.columns[opts.columnIndex].groups.splice(opts.groupIndex, 1);
+                            renderEditPage();
+                        }}/>
+                </div>
             </div>
         );
     }
