@@ -2,5 +2,11 @@
     .column {
         float: left;
         margin: 0 10px;
+        .column-header {
+            label {
+                float: left;
+                margin-right: 10px;
+            }
+        }
     }
 }

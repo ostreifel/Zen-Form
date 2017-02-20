@@ -10,10 +10,9 @@ import {
 import { IColumnProperties, IControlProperties, IGroupProperties } from "./renderEditFormContracts";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import { PrimaryButton } from "OfficeFabric/components/Button/PrimaryButton/PrimaryButton";
 import { Button } from "OfficeFabric/components/Button/Button";
 import { ButtonType } from "OfficeFabric/components/Button";
-import { IconButton  } from "OfficeFabric/components/Button";
+import { Label } from "OfficeFabric/components/Label/Label";
 
 const configuration: IEditFormContext = VSS.getConfiguration();
 const form = configuration.form;
@@ -22,11 +21,17 @@ class PageColumn extends React.Component<{options: IColumnProperties }, void> {
     render() {
         return (
             <div className="column">
-                {`Column ${this.props.options.columnIndex}`}
-                <Button
-                    buttonType={ButtonType.hero}
-                    icon="Remove"
-                >Remove Column</Button>
+                <div className="column-header">
+                    <Label>{`Column ${this.props.options.columnIndex}`}</Label>
+                    <Button
+                        buttonType={ButtonType.hero}
+                        icon="Cancel"
+                        title="Remove Column"
+                        onClick={() => {
+                            form.columns.splice(this.props.options.columnIndex, 1);
+                            renderEditPage();
+                        }}/>
+                </div>
             </div>
         );
     }
@@ -42,8 +47,12 @@ class PageForm extends React.Component<{form: IPageForm}, void> {
                 <Button
                     buttonType={ButtonType.hero}
                     icon="Add"
-                    >Add Column
-                </Button>
+                    title="Add Column"
+                    onClick={() => {
+                        form.columns.push({groups: []});
+                        renderEditPage();
+                    }}
+                    />
             </div>);
         return <div className="edit-page-form">{columns}</div>;
     }
