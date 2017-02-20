@@ -13,12 +13,35 @@ import * as ReactDOM from "react-dom";
 import { Button } from "OfficeFabric/components/Button/Button";
 import { ButtonType } from "OfficeFabric/components/Button";
 import { Label } from "OfficeFabric/components/Label/Label";
+import { TextField } from "OfficeFabric/components/TextField/TextField";
 
 const configuration: IEditFormContext = VSS.getConfiguration();
 const form = configuration.form;
 
+class GroupColumn extends React.Component<{options: IGroupProperties }, void> {
+    render() {
+        return (
+            <div className="group">
+                <TextField className="group-label" value={this.props.options.group.label}/>
+            </div>
+        );
+    }
+}
 class PageColumn extends React.Component<{options: IColumnProperties }, void> {
     render() {
+        const groups = this.props.options.column.groups.map((group, groupIndex) => 
+            <GroupColumn options={$.extend({group, groupIndex}, this.props.options)}/>
+        );
+        groups.push(<div className="group">
+            <Button
+                buttonType={ButtonType.hero}
+                icon="Add"
+                onClick={() => {
+                    const opts = this.props.options;
+                    form.columns[opts.columnIndex].groups.push({ label: "Custom Group", controls: [] });
+                    renderEditPage();
+                }}>{"Add group"}</Button>
+        </div>);
         return (
             <div className="column">
                 <div className="column-header">
@@ -32,6 +55,7 @@ class PageColumn extends React.Component<{options: IColumnProperties }, void> {
                             renderEditPage();
                         }}/>
                 </div>
+                {groups}
             </div>
         );
     }
