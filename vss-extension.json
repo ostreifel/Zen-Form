@@ -1,7 +1,7 @@
 {
     "manifestVersion": 1,
     "id": "customize-team-form",
-    "version": "0.1.52",
+    "version": "0.1.67",
     "name": "Customize Team Form",
     "scopes": [ "vso.work", "vso.work_write" ],
     "description": "Create team specific form customizations.",
@@ -37,6 +37,10 @@
         },
         {
             "path": "dist/page.html",
+            "addressable": true
+        },
+        {
+            "path": "dist/editForm.html",
             "addressable": true
         },
         {

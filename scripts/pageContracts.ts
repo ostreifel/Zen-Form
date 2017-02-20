@@ -21,9 +21,9 @@ export interface IFieldValues {
 }
 export type IFieldValue = Object;
 export interface IFieldDefintions {
-    [referenceName: string]: IFieldDefinion;
+    [referenceName: string]: IFieldDefinition;
 }
-export interface IFieldDefinion {
+export interface IFieldDefinition {
     readonly: boolean;
     type: FieldType;
     helpText: string;

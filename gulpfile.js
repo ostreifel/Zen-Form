@@ -10,7 +10,6 @@ const sass = require('gulp-sass');
 
 const args =  yargs.argv;
 
-const entryPoints = ['registerPage'];
 const jsFolder = 'js';
 const contentFolder = 'dist';
 
@@ -55,14 +54,8 @@ gulp.task('copy', ['build'], () => {
 
 
 gulp.task('webpack', ['copy'], () => {
-    let stream;
-    for (let fileName of entryPoints) {
-        stream = gulp.src(`./${jsFolder}/${fileName}.js`)
-            .pipe(webpack(require('./webpack.config.js')))
-            .pipe(rename(`${fileName}.js`))
-            .pipe(gulp.dest(`${contentFolder}/scripts`));
-    }
-    return stream;
+    return webpack(require('./webpack.config.js'))
+        .pipe(gulp.dest(`${contentFolder}/scripts`));
 });
 
 gulp.task('package', ['webpack'], () => {

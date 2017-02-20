@@ -28,7 +28,8 @@ export function openEditFormDialog(form: IPageForm, onFormChanged: (form: IPageF
         const contentContribution = `${extInfo.publisherId}.${extInfo.extensionId}.edit-form`;
         dialogService.openDialog(contentContribution, dialogOptions, options).then(dialog => {
             dialog.getContributionInstance("edit-form").then((callbacks: IEditFormCallbacks) => {
-                getForm = callbacks.getForm;
+                console.log("edit-form contribution", callbacks);
+                // getForm = callbacks.getForm;
             });
         });
     });

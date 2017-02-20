@@ -1,8 +1,13 @@
 const webpack = require('webpack');
 
 module.exports = {
+    entry: {
+        registerPage: "./js/registerPage.js",
+        editForm: "./js/editForm.js"
+    },
     output: {
-        libraryTarget: "amd"
+        libraryTarget: "amd",
+        filename: "[name].js"
     },
     externals: [{
         "q": true,
