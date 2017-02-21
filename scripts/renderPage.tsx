@@ -23,8 +23,9 @@ class PageControl extends React.Component<{
         let controlValue: JSX.Element;
 
         const referenceName = this.props.control.referenceName;
-        const fieldType = this.props.definitions[referenceName].type;
-        const helpText = this.props.definitions[this.props.control.referenceName].helpText;
+        const field = this.props.definitions[referenceName]
+        const fieldType = field && field.type;
+        const helpText = field && field.helpText;
         const labelText = this.props.control.label;
         switch (fieldType) {
             case FieldType.String:
@@ -45,7 +46,9 @@ class PageControl extends React.Component<{
              * - boolean
              */
             default:
-            controlValue = <div className="control-value">{`Unable to render field type ${FieldType[fieldType]}`}</div>;
+            controlValue = <div className="control-value">
+                {`Unable to render field type ${FieldType[fieldType]} (${referenceName})`}
+            </div>;
             break;
         }
 
