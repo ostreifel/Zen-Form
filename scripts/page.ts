@@ -52,7 +52,7 @@ export class Page implements IWorkItemNotificationListener {
     }
     private onFormChanged(form: IPageForm) {
         console.log("TODO: update page with new form here", form);
-
+        this.renderPage(form);
     }
     public onLoaded(workItemLoadedArgs: IWorkItemLoadedArgs): void {
         this.service.getFields().then(fields => {});
@@ -79,10 +79,7 @@ export class Page implements IWorkItemNotificationListener {
                 }]
             }]
         }]};
-        const mockValues: IFieldValues = {
-            "System.Title": "Sample Title"
-        };
-        renderPage(mockForm, this.fieldDefinitions, mockValues, () => this.openDialog(mockForm));
+        this.renderPage(mockForm);
     }
     public onFieldChanged(fieldChangedArgs: IWorkItemFieldChangedArgs): void { }
     public onSaved(savedEventArgs: IWorkItemChangedArgs): void { }
@@ -93,5 +90,14 @@ export class Page implements IWorkItemNotificationListener {
     private openDialog(form: IPageForm) {
         openEditFormDialog(form, this.fieldDefinitions, (form) => this.onFormChanged(form));
     }
+    private getWitFieldValues(): IPromise<IFieldValues> {
+        return this.service.getFieldValues(Object.keys(this.fieldDefinitions));
+    }
+    private renderPage(form: IPageForm) {
+        this.getWitFieldValues().then(values => {
+            renderPage(form, this.fieldDefinitions, values, () => this.openDialog(form));
+        });
+    }
+
 
 }
