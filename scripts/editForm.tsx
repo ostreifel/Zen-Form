@@ -1,12 +1,5 @@
 import { IEditFormContext, IEditFormCallbacks } from "./editFormContracts";
-import {
-    IPageForm,
-    IPageColumn,
-    IPageGroup,
-    IPageControl,
-    IFieldDefinition,
-    IFieldDefinitions
-} from "./pageContracts";
+import { IPageForm } from "./pageContracts";
 import { IColumnProperties, IControlProperties, IGroupProperties } from "./renderEditFormContracts";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
@@ -31,7 +24,7 @@ class Control extends React.Component<{options: IControlProperties }, {showDialo
     render() {
         return (
             <div className="control">
-                <Button 
+                <Button
                     className="control-button"
                     onClick={() => this._showDialog()}
                 >{this.props.options.control.label}</Button>
@@ -94,7 +87,7 @@ class Control extends React.Component<{options: IControlProperties }, {showDialo
 
 class Group extends React.Component<{options: IGroupProperties }, void> {
     render() {
-        const controls = this.props.options.group.controls.map((control, controlIndex) => 
+        const controls = this.props.options.group.controls.map((control, controlIndex) =>
             <Control options={$.extend({control, controlIndex}, this.props.options)}/>
         );
         controls.push(<div className="control">
@@ -129,7 +122,7 @@ class Group extends React.Component<{options: IGroupProperties }, void> {
 }
 class Column extends React.Component<{options: IColumnProperties }, void> {
     render() {
-        const groups = this.props.options.column.groups.map((group, groupIndex) => 
+        const groups = this.props.options.column.groups.map((group, groupIndex) =>
             <Group options={$.extend({group, groupIndex}, this.props.options)}/>
         );
         groups.push(<div className="group">

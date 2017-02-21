@@ -52,6 +52,7 @@ export class Page implements IWorkItemNotificationListener {
     }
     private onFormChanged(form: IPageForm) {
         console.log("TODO: update page with new form here", form);
+
     }
     public onLoaded(workItemLoadedArgs: IWorkItemLoadedArgs): void {
         this.service.getFields().then(fields => {});
@@ -81,12 +82,16 @@ export class Page implements IWorkItemNotificationListener {
         const mockValues: IFieldValues = {
             "System.Title": "Sample Title"
         };
-        renderPage(mockForm, this.fieldDefinitions, mockValues, () => openEditFormDialog(mockForm, this.fieldDefinitions, (form) => this.onFormChanged(form)));
+        renderPage(mockForm, this.fieldDefinitions, mockValues, () => this.openDialog(mockForm));
     }
     public onFieldChanged(fieldChangedArgs: IWorkItemFieldChangedArgs): void { }
     public onSaved(savedEventArgs: IWorkItemChangedArgs): void { }
     public onRefreshed(refreshEventArgs: IWorkItemChangedArgs): void { }
     public onReset(undoEventArgs: IWorkItemChangedArgs): void { }
     public onUnloaded(unloadedEventArgs: IWorkItemChangedArgs): void { }
+
+    private openDialog(form: IPageForm) {
+        openEditFormDialog(form, this.fieldDefinitions, (form) => this.onFormChanged(form));
+    }
 
 }
