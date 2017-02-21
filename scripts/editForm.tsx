@@ -22,6 +22,8 @@ const definitionsMap = config.definitions;
 const definitionsArr = Object.keys(config.definitions).map(k => config.definitions[k]).sort((a, b) => a.name.localeCompare(b.name));
 
 class Control extends React.Component<{options: IControlProperties }, {showDialog: boolean}> {
+    private label: string;
+    private fieldRefName: string;
     constructor() {
         super();
         this.state = {showDialog: false};
@@ -54,25 +56,38 @@ class Control extends React.Component<{options: IControlProperties }, {showDialo
                 >
                     <TextField className="control-label"
                         label="Label"
+                        onChanged={(newValue) => this.label = newValue}
                         value={this.props.options.control.label} />
                     <Dropdown className="control-field"
-                        options={definitionsArr.map(d => {return { key: d.name, text: d.name }; })}
-                        selectedKey={definitionsMap[this.props.options.control.referenceName].name}
+                        options={definitionsArr.map(d => {return { key: d.referenceName, text: d.name }; })}
+                        selectedKey={definitionsMap[this.props.options.control.referenceName].referenceName}
+                        onChanged={(item) => this.fieldRefName = String(item.key)}
                         label="Backing field"
                         />
                         
                     <DialogFooter>
-                        <Button buttonType={ ButtonType.primary } onClick={ () => this._closeDialog() }>Save</Button>
+                        <Button buttonType={ ButtonType.primary } onClick={ () => this._saveControl() }>Save</Button>
                         <Button onClick={ () => this._closeDialog() }>Cancel</Button>
                     </DialogFooter>
                 </Dialog>
             </div>
         );
     }
+    private _saveControl() {
+        this._closeDialog();
+        const opts = this.props.options;
+        form.columns[opts.columnIndex].groups[opts.groupIndex].controls[opts.controlIndex] = {
+            label: this.label,
+            referenceName: this.fieldRefName
+        };
+        renderEditPage();
+    }
     private _closeDialog() {
         this.setState({showDialog: false});
     }
     private _showDialog() {
+        this.label = this.props.options.control.label;
+        this.fieldRefName = this.props.options.control.referenceName;
         this.setState({showDialog: true});
     }
 }
