@@ -19,6 +19,7 @@
         .group {
             margin-bottom: 40px;
             .group-header {
+                overflow: hidden;
                 .group-label {
                     float: left;
                     margin-right: 10px;
@@ -26,7 +27,12 @@
                 button {
                     float: right;
                 }
+            }
+            .control {
                 overflow: hidden;
+                button.control-remove {
+                    float: right;
+                }
             }
         }
     }

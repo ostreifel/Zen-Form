@@ -10,31 +10,70 @@ import {
 import { IColumnProperties, IControlProperties, IGroupProperties } from "./renderEditFormContracts";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import { Button } from "OfficeFabric/components/Button/Button";
-import { ButtonType } from "OfficeFabric/components/Button";
-import { Label } from "OfficeFabric/components/Label/Label";
-import { TextField } from "OfficeFabric/components/TextField/TextField";
-import { Dropdown } from "OfficeFabric/components/Dropdown/Dropdown";
+import { ButtonType, Button } from "OfficeFabric/components/Button";
+import { Label } from "OfficeFabric/components/Label";
+import { TextField } from "OfficeFabric/components/TextField";
+import { Dropdown } from "OfficeFabric/components/Dropdown";
+import { Dialog, DialogType, DialogFooter } from "OfficeFabric/components/Dialog";
 
 const config: IEditFormContext = VSS.getConfiguration();
 const form = config.form;
 const definitionsMap = config.definitions;
 const definitionsArr = Object.keys(config.definitions).map(k => config.definitions[k]).sort((a, b) => a.name.localeCompare(b.name));
 
-class Control extends React.Component<{options: IControlProperties }, void> {
+class Control extends React.Component<{options: IControlProperties }, {showDialog: boolean}> {
+    constructor() {
+        super();
+        this.state = {showDialog: false};
+    }
     render() {
         return (
             <div className="control">
-                <TextField className="control-label"
-                    label="Label"
-                    value={this.props.options.control.label} />
-                <Dropdown className="control-field"
-                    options={definitionsArr.map(d => {return { key: d.name, text: d.name }; })}
-                    selectedKey={definitionsMap[this.props.options.control.referenceName].name}
-                    label="Backing field"
-                    />
+                <Button 
+                    className="control-remove"
+                    onClick={() => this._showDialog()}
+                >{this.props.options.control.label}</Button>
+                <Button
+                    className="control-remove"
+                    buttonType={ButtonType.hero}
+                    icon="Cancel"
+                    title="Remove group"
+                    onClick={() => {
+                        const opts = this.props.options;
+                        form.columns[opts.columnIndex].groups[opts.groupIndex].controls.splice(opts.columnIndex, 1);
+                        renderEditPage();
+                    }}/>
+                
+                <Dialog
+                    isOpen={ this.state.showDialog }
+                    type={ DialogType.normal }
+                    onDismiss={ () => this._closeDialog() }
+                    title="Edit Control"
+                    isBlocking={ false }
+                    containerClassName="edit-page-form"
+                >
+                    <TextField className="control-label"
+                        label="Label"
+                        value={this.props.options.control.label} />
+                    <Dropdown className="control-field"
+                        options={definitionsArr.map(d => {return { key: d.name, text: d.name }; })}
+                        selectedKey={definitionsMap[this.props.options.control.referenceName].name}
+                        label="Backing field"
+                        />
+                        
+                    <DialogFooter>
+                        <Button buttonType={ ButtonType.primary } onClick={ () => this._closeDialog() }>Save</Button>
+                        <Button onClick={ () => this._closeDialog() }>Cancel</Button>
+                    </DialogFooter>
+                </Dialog>
             </div>
         );
+    }
+    private _closeDialog() {
+        this.setState({showDialog: false});
+    }
+    private _showDialog() {
+        this.setState({showDialog: true});
     }
 }
 
