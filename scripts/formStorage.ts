@@ -30,8 +30,8 @@ export function getForm(wit: WorkItemType): IPromise<IPageForm> {
 function fromOobForm(wit: WorkItemType): IPageForm {
     console.log("xml form", wit.xmlForm);
     const xmlForm = $($.parseXML(wit.xmlForm));
-    const firstPage = xmlForm.find("Tab").first().children();
-    const columns = firstPage.children();
+    const firstPage = xmlForm.find("Tab").first();
+    const columns = firstPage.find("Column[PercentWidth!=100]").filter((i, c) => $(c).find("Column[PercentWidth!=100]").length === 0 );
     const form: IPageForm = {
         version: 1,
         id: getFormId(wit),
