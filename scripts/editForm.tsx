@@ -48,10 +48,10 @@ class Control extends React.Component<{options: IControlProperties }, {showDialo
                     <TextField className="control-label"
                         label="Label"
                         onChanged={(newValue) => this.setState($.extend(this.state, {label: newValue}))}
-                        value={this.state.label || this.props.options.control.label} />
+                        value={this.state.label} />
                     <Dropdown className="control-field"
                         options={definitionsArr.map(d => {return { key: d.referenceName, text: d.name }; })}
-                        selectedKey={this.state.refName || definitionsMap[this.props.options.control.referenceName].referenceName}
+                        selectedKey={this.state.refName}
                         onChanged={(item) => {
                             const fieldRefName = String(item.key);
                             const label = definitionsMap[fieldRefName].name;
@@ -69,19 +69,22 @@ class Control extends React.Component<{options: IControlProperties }, {showDialo
         );
     }
     private _saveControl() {
-        this._closeDialog();
         const opts = this.props.options;
         form.columns[opts.columnIndex].groups[opts.groupIndex].controls[opts.controlIndex] = {
-            label: this.state.label || this.props.options.control.label,
-            referenceName: this.state.refName || definitionsMap[this.props.options.control.referenceName].referenceName
+            label: this.state.label,
+            referenceName: this.state.refName
         };
+        this._closeDialog();
         renderEditPage();
     }
     private _closeDialog() {
         this.setState({showDialog: false});
     }
     private _showDialog() {
-        this.setState({showDialog: true});
+        this.setState({
+            showDialog: true,
+            label: this.props.options.control.label,
+            refName: this.props.options.control.referenceName});
     }
 }
 
