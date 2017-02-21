@@ -104,7 +104,14 @@ class Group extends React.Component<{options: IGroupProperties }, void> {
         return (
             <div className="group">
                 <div className="group-header">
-                    <TextField className="group-label" value={this.props.options.group.label}/>
+                    <TextField
+                        className="group-label"
+                        value={this.props.options.group.label}
+                        onChanged={newValue => {
+                            const opts = this.props.options;
+                            form.columns[opts.columnIndex].groups[opts.groupIndex].label = newValue;
+                        }}
+                    />
                     <Button
                         buttonType={ButtonType.hero}
                         icon="Cancel"
