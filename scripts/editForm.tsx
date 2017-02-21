@@ -14,15 +14,26 @@ import { Button } from "OfficeFabric/components/Button/Button";
 import { ButtonType } from "OfficeFabric/components/Button";
 import { Label } from "OfficeFabric/components/Label/Label";
 import { TextField } from "OfficeFabric/components/TextField/TextField";
+import { Dropdown } from "OfficeFabric/components/Dropdown/Dropdown";
 
 const config: IEditFormContext = VSS.getConfiguration();
 const form = config.form;
-const definitions = Object.keys(config.definitions).map(k => config.definitions[k]).sort((a, b) => a.name.localeCompare(b.name));
+const definitionsMap = config.definitions;
+const definitionsArr = Object.keys(config.definitions).map(k => config.definitions[k]).sort((a, b) => a.name.localeCompare(b.name));
 
 class Control extends React.Component<{options: IControlProperties }, void> {
     render() {
         return (
-            <div className="control">{this.props.options.control.label}</div>
+            <div className="control">
+                <TextField className="control-label"
+                    label="Label"
+                    value={this.props.options.control.label} />
+                <Dropdown className="control-field"
+                    options={definitionsArr.map(d => {return { key: d.name, text: d.name }; })}
+                    selectedKey={definitionsMap[this.props.options.control.referenceName].name}
+                    label="Backing field"
+                    />
+            </div>
         );
     }
 }
@@ -38,7 +49,7 @@ class Group extends React.Component<{options: IGroupProperties }, void> {
                 icon="Add"
                 onClick={() => {
                     const opts = this.props.options;
-                    const defaultField = definitions[0];
+                    const defaultField = definitionsArr[0];
                     form.columns[opts.columnIndex].groups[opts.groupIndex].controls.push({ label: defaultField.name, referenceName: defaultField.referenceName });
                     renderEditPage();
                 }}>{"Add Control"}</Button>
