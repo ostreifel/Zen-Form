@@ -30,7 +30,7 @@ class Control extends React.Component<{options: IControlProperties }, {showDialo
         return (
             <div className="control">
                 <Button 
-                    className="control-remove"
+                    className="control-button"
                     onClick={() => this._showDialog()}
                 >{this.props.options.control.label}</Button>
                 <Button
@@ -50,7 +50,7 @@ class Control extends React.Component<{options: IControlProperties }, {showDialo
                     onDismiss={ () => this._closeDialog() }
                     title="Edit Control"
                     isBlocking={ false }
-                    containerClassName="edit-page-form"
+                    containerClassName="ui-dialog"
                 >
                     <TextField className="control-label"
                         label="Label"

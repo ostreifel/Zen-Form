@@ -30,6 +30,10 @@
             }
             .control {
                 overflow: hidden;
+                margin-bottom: 5px;
+                button.control-button {
+                    margin-right: 10px;
+                }
                 button.control-remove {
                     float: right;
                 }
