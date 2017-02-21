@@ -19,11 +19,13 @@ class PageControl extends React.Component<{
     definitions: IFieldDefinitions,
     values: IFieldValues
 }, void> {
+    static counter = 0;
     render() {
         let controlValue: JSX.Element;
 
         const referenceName = this.props.control.referenceName;
         const field = this.props.definitions[referenceName]
+        const fieldValue = this.props.values[referenceName];
         const fieldType = field && field.type;
         const helpText = field && field.helpText;
         const labelText = this.props.control.label;
@@ -31,18 +33,42 @@ class PageControl extends React.Component<{
             case FieldType.String:
             controlValue = <TextField
                 className="control-value"
-                value={this.props.values[referenceName] as string}
+                value={fieldValue as string}
                 label={labelText}
                 title={helpText} />;
+            break;
+            case FieldType.Html:
+            controlValue = <div className="control-value">
+                <Label title={helpText}>{labelText}</Label>
+                <div className="html-value"
+                    contentEditable={true}
+                    dangerouslySetInnerHTML={{ __html: fieldValue as string }}></div>
+            </div>;
+            break;
+            case FieldType.Integer:
+            controlValue = <TextField
+                className="control-value"
+                value={typeof fieldValue === undefined || fieldValue === null ? "" : String(fieldValue)}
+                label={labelText}
+                title={helpText}
+                onGetErrorMessage={value => value === "" || value.match(/^\d+$/) ? "" : "Value must be a integer"}
+            />;
+            break;
+            case FieldType.Double:
+            controlValue = <TextField
+                className="control-value"
+                value={typeof fieldValue === undefined || fieldValue === null ? "" : String(fieldValue)}
+                label={labelText}
+                title={helpText}
+                onGetErrorMessage={value => value === "" || value.match(/^\d*\.?\d*$/) ? "" : "Value must be a double"}
+            />;
             break;
             /**
              * TODO more field types here
              * Types to Support
              * - Combo String
              * - identity
-             * - html
              * - discussion (sort of html)
-             * - number
              * - boolean
              */
             default:
