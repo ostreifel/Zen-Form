@@ -14,12 +14,10 @@ const form = config.form;
 const definitionsMap = config.definitions;
 const definitionsArr = Object.keys(config.definitions).map(k => config.definitions[k]).sort((a, b) => a.name.localeCompare(b.name));
 
-class Control extends React.Component<{options: IControlProperties }, {showDialog: boolean}> {
-    private label: string;
-    private fieldRefName: string;
+class Control extends React.Component<{options: IControlProperties }, {showDialog: boolean, label: string, refName: string}> {
     constructor() {
         super();
-        this.state = {showDialog: false};
+        this.state = {showDialog: false, label: "", refName: ""};
     }
     render() {
         return (
@@ -49,12 +47,16 @@ class Control extends React.Component<{options: IControlProperties }, {showDialo
                 >
                     <TextField className="control-label"
                         label="Label"
-                        onChanged={(newValue) => this.label = newValue}
-                        value={this.props.options.control.label} />
+                        onChanged={(newValue) => this.setState($.extend(this.state, {label: newValue}))}
+                        value={this.state.label || this.props.options.control.label} />
                     <Dropdown className="control-field"
                         options={definitionsArr.map(d => {return { key: d.referenceName, text: d.name }; })}
-                        selectedKey={definitionsMap[this.props.options.control.referenceName].referenceName}
-                        onChanged={(item) => this.fieldRefName = String(item.key)}
+                        selectedKey={this.state.refName || definitionsMap[this.props.options.control.referenceName].referenceName}
+                        onChanged={(item) => {
+                            const fieldRefName = String(item.key);
+                            const label = definitionsMap[fieldRefName].name;
+                            this.setState($.extend(this.state, {refName: fieldRefName, label: label}));
+                        }}
                         label="Backing field"
                         />
                         
@@ -70,8 +72,8 @@ class Control extends React.Component<{options: IControlProperties }, {showDialo
         this._closeDialog();
         const opts = this.props.options;
         form.columns[opts.columnIndex].groups[opts.groupIndex].controls[opts.controlIndex] = {
-            label: this.label,
-            referenceName: this.fieldRefName
+            label: this.state.label || this.props.options.control.label,
+            referenceName: this.state.refName || definitionsMap[this.props.options.control.referenceName].referenceName
         };
         renderEditPage();
     }
@@ -79,8 +81,6 @@ class Control extends React.Component<{options: IControlProperties }, {showDialo
         this.setState({showDialog: false});
     }
     private _showDialog() {
-        this.label = this.props.options.control.label;
-        this.fieldRefName = this.props.options.control.referenceName;
         this.setState({showDialog: true});
     }
 }
