@@ -25,7 +25,7 @@ class Control extends React.Component<{options: IControlProperties }, {showDialo
                 <Button
                     className="control-button"
                     onClick={() => this._showDialog()}
-                >{this.props.options.control.label}</Button>
+                >{this.props.options.control.label || `(${definitionsMap[this.props.options.control.referenceName].name}) - No Label`}</Button>
                 <Button
                     className="control-remove"
                     buttonType={ButtonType.hero}
@@ -48,6 +48,7 @@ class Control extends React.Component<{options: IControlProperties }, {showDialo
                     <TextField className="control-label"
                         label="Label"
                         onChanged={(newValue) => this.setState($.extend(this.state, {label: newValue}))}
+                        placeholder="Enter a label"
                         value={this.state.label} />
                     <Dropdown className="control-field"
                         options={definitionsArr.map(d => {return { key: d.referenceName, text: d.name }; })}
@@ -110,6 +111,7 @@ class Group extends React.Component<{options: IGroupProperties }, void> {
                     <TextField
                         className="group-label"
                         value={this.props.options.group.label}
+                        placeholder="Enter a group label"
                         onChanged={newValue => {
                             const opts = this.props.options;
                             form.columns[opts.columnIndex].groups[opts.groupIndex].label = newValue;
