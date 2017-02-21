@@ -52,6 +52,34 @@ function fromOobForm(wit: WorkItemType): IPageForm {
             };
         })
     };
+    const validFields = {};
+    for (let field of wit.fieldInstances) {
+        validFields[field.referenceName] = void 0;
+    }
+    // filter out controls that are not on validFields
+    for (let column of form.columns) {
+        for (let group of column.groups) {
+            for (let i = 0; i < group.controls.length; i++) {
+                while (i < group.controls.length && !(group.controls[i].referenceName in validFields)) {
+                    group.controls.splice(i, 1);
+                }
+            }
+        }
+    }
+    // Filter out groups with no controls
+    for (let column of form.columns) {
+        for (let i = 0; i < column.groups.length; i++) {
+            while (i < column.groups.length && column.groups[i].controls.length === 0) {
+                column.groups.splice(i, 1);
+            }
+        }
+    }
+    // Filter out columns with no groups
+    for (let i = 0; i < form.columns.length; i++) {
+        while (i < form.columns.length && form.columns[i].groups.length === 0) {
+            form.columns.splice(i, 1);
+        }
+    }
     console.log("using converted form", form);
     return form;
     // const mockForm: IPageForm = { version: 1, id: "mock-form", columns: [{
