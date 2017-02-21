@@ -1,5 +1,4 @@
 /// <reference types="../node_modules/vss-web-extension-sdk" />
-
 import {
     IWorkItemNotificationListener,
     IWorkItemLoadedArgs,
@@ -15,6 +14,7 @@ import { WorkItemType, WorkItemField } from "TFS/WorkItemTracking/Contracts";
 import { IPageForm, IFieldValues, IFieldDefinitions } from "./pageContracts";
 import { renderPage } from "./renderPage";
 import { openEditFormDialog } from "./openEditFormDialog";
+import { getForm, saveForm } from "./formStorage";
 
 export class Page implements IWorkItemNotificationListener {
     public static create(container: JQuery): IPromise<Page> {
@@ -51,39 +51,18 @@ export class Page implements IWorkItemNotificationListener {
         }
     }
     private onFormChanged(form: IPageForm) {
-        console.log("TODO: update page with new form here", form);
-        this.renderPage(form);
+        saveForm(form, this.wit).then(form => {
+            this.renderPage(form);
+        });
     }
     public onLoaded(workItemLoadedArgs: IWorkItemLoadedArgs): void {
-        this.service.getFields().then(fields => {});
-        const mockForm: IPageForm = { version: 1, columns: [{
-            groups: [{
-                label: "Group1",
-                controls: [{
-                    label: "Title Field",
-                    referenceName: "System.Title"
-                }]
-            }, {
-                label: "Group2",
-                controls: [{
-                    label: "Title Field2",
-                    referenceName: "System.Title"
-                }]
-            }]
-        }, {
-            groups: [{
-                label: "Group3",
-                controls: [{
-                    label: "Title Field3",
-                    referenceName: "System.Title"
-                }]
-            }]
-        }]};
-        this.renderPage(mockForm);
+        getForm(this.wit).then(form => this.renderPage(form));
     }
     public onFieldChanged(fieldChangedArgs: IWorkItemFieldChangedArgs): void { }
     public onSaved(savedEventArgs: IWorkItemChangedArgs): void { }
-    public onRefreshed(refreshEventArgs: IWorkItemChangedArgs): void { }
+    public onRefreshed(refreshEventArgs: IWorkItemChangedArgs): void {
+        getForm(this.wit).then(form => this.renderPage(form));
+     }
     public onReset(undoEventArgs: IWorkItemChangedArgs): void { }
     public onUnloaded(unloadedEventArgs: IWorkItemChangedArgs): void { }
 
@@ -98,6 +77,4 @@ export class Page implements IWorkItemNotificationListener {
             renderPage(form, this.fieldDefinitions, values, () => this.openDialog(form));
         });
     }
-
-
 }
