@@ -21,11 +21,13 @@ export interface IFieldValues {
     [referenceName: string]: IFieldValue;
 }
 export type IFieldValue = Object;
-export interface IFieldDefintions {
+export interface IFieldDefinitions {
     [referenceName: string]: IFieldDefinition;
 }
 export interface IFieldDefinition {
     readonly: boolean;
     type: FieldType;
     helpText: string;
+    name: string;
+    referenceName: string;
 }

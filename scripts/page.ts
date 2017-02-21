@@ -12,8 +12,9 @@ import {
 } from "TFS/WorkItemTracking/Services";
 import { getClient } from "TFS/WorkItemTracking/RestClient";
 import { WorkItemType, WorkItemField } from "TFS/WorkItemTracking/Contracts";
-import { IPageForm, IFieldValues, IFieldDefintions } from "./pageContracts";
+import { IPageForm, IFieldValues, IFieldDefinitions } from "./pageContracts";
 import { renderPage } from "./renderPage";
+import { openEditFormDialog } from "./openEditFormDialog";
 
 export class Page implements IWorkItemNotificationListener {
     public static create(container: JQuery): IPromise<Page> {
@@ -30,7 +31,7 @@ export class Page implements IWorkItemNotificationListener {
     }
 
 
-    private readonly fieldDefinitions: IFieldDefintions = {};
+    private readonly fieldDefinitions: IFieldDefinitions = {};
     private constructor(readonly container: JQuery,
                         readonly service: IWorkItemFormService,
                         readonly witFields: WorkItemField[],
@@ -43,7 +44,9 @@ export class Page implements IWorkItemNotificationListener {
             this.fieldDefinitions[field.referenceName] = {
                 helpText: field.helpText,
                 readonly: fieldTypesDictionary[field.referenceName].readOnly,
-                type: fieldTypesDictionary[field.referenceName].type
+                type: fieldTypesDictionary[field.referenceName].type,
+                name: fieldTypesDictionary[field.referenceName].name,
+                referenceName: fieldTypesDictionary[field.referenceName].referenceName
             };
         }
     }
@@ -78,7 +81,7 @@ export class Page implements IWorkItemNotificationListener {
         const mockValues: IFieldValues = {
             "System.Title": "Sample Title"
         };
-        renderPage(mockForm, this.fieldDefinitions, mockValues, (form) => this.onFormChanged(form));
+        renderPage(mockForm, this.fieldDefinitions, mockValues, () => openEditFormDialog(mockForm, this.fieldDefinitions, (form) => this.onFormChanged(form)));
     }
     public onFieldChanged(fieldChangedArgs: IWorkItemFieldChangedArgs): void { }
     public onSaved(savedEventArgs: IWorkItemChangedArgs): void { }

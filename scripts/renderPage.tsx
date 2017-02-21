@@ -5,11 +5,10 @@ import {
     IPageColumn,
     IPageGroup,
     IPageControl,
-    IFieldDefintions,
+    IFieldDefinitions,
     IFieldValues
 } from "./pageContracts";
 import { FieldType } from "TFS/WorkItemTracking/Contracts";
-import { openEditFormDialog } from "./openEditFormDialog";
 import { TextField } from "OfficeFabric/components/TextField/TextField";
 import { Label } from "OfficeFabric/components/Label/Label";
 import { PrimaryButton } from "OfficeFabric/components/Button/PrimaryButton/PrimaryButton";
@@ -17,7 +16,7 @@ import { PrimaryButton } from "OfficeFabric/components/Button/PrimaryButton/Prim
 
 class PageControl extends React.Component<{
     control: IPageControl,
-    definitions: IFieldDefintions,
+    definitions: IFieldDefinitions,
     values: IFieldValues
 }, void> {
     render() {
@@ -60,7 +59,7 @@ class PageControl extends React.Component<{
 
 class PageGroup extends React.Component<{
     group: IPageGroup,
-    definitions: IFieldDefintions,
+    definitions: IFieldDefinitions,
     values: IFieldValues
 }, void> {
     render() {
@@ -84,7 +83,7 @@ class PageGroup extends React.Component<{
 
 class PageColumn extends React.Component<{
     column: IPageColumn,
-    definitions: IFieldDefintions,
+    definitions: IFieldDefinitions,
     values: IFieldValues
 }, void> {
     render() {
@@ -103,9 +102,9 @@ class PageColumn extends React.Component<{
 
 class PageForm extends React.Component<{
     form: IPageForm;
-    definitions: IFieldDefintions;
+    definitions: IFieldDefinitions;
     values: IFieldValues;
-    onFormUpdated: (form: IPageForm) => void;
+    openEditFormDialog: () => void;
 }, void> {
     render() {
         let columns = this.props.form.columns.map( column =>
@@ -116,7 +115,7 @@ class PageForm extends React.Component<{
         );
         return (
             <div className="page-form">
-                <PageHeader form={this.props.form} onFormUpdated={this.props.onFormUpdated}/>
+                <PageHeader form={this.props.form} openEditFormDialog={this.props.openEditFormDialog}/>
                 <div className="page-columns">
                     {columns}
                 </div>
@@ -127,14 +126,14 @@ class PageForm extends React.Component<{
 
 class PageHeader extends React.Component<{
     form: IPageForm;
-    onFormUpdated: (form: IPageForm) => void
+    openEditFormDialog: () => void;
 }, void> {
     render() {
         return (
             <div className="page-header">
                 <PrimaryButton
                     className="open-dialog-button"
-                    onClick={() => openEditFormDialog(this.props.form, this.props.onFormUpdated)}>
+                    onClick={this.props.openEditFormDialog}>
                         {"Customize Page"}
                 </PrimaryButton>
                 <div className="feedback">
@@ -147,12 +146,12 @@ class PageHeader extends React.Component<{
 }
 
 export function renderPage(workItemForm: IPageForm,
-                           definitions: IFieldDefintions,
+                           definitions: IFieldDefinitions,
                            values: IFieldValues,
-                           onFormUpdated: (form: IPageForm) => void) {
+                           openEditFormDialog: () => void) {
     ReactDOM.render(<PageForm
         form={workItemForm}
         definitions={definitions}
         values={values}
-        onFormUpdated={onFormUpdated} />, document.getElementById("page-wrapper"));
+        openEditFormDialog={openEditFormDialog} />, document.getElementById("page-wrapper"));
 }

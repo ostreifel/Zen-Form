@@ -1,8 +1,8 @@
-import { IPageForm } from "./pageContracts";
+import { IPageForm, IFieldDefinitions } from "./pageContracts";
 import { IEditFormContext, IEditFormCallbacks } from "./editFormContracts";
 import * as Q from "q";
 
-export function openEditFormDialog(form: IPageForm, onFormChanged: (form: IPageForm) => void) {
+export function openEditFormDialog(form: IPageForm, definitions: IFieldDefinitions, onFormChanged: (form: IPageForm) => void) {
     VSS.getService(VSS.ServiceIds.Dialog).then(function (dialogService: IHostDialogService) {
         let getForm = () => {
             console.log("Get form not set");
@@ -26,7 +26,8 @@ export function openEditFormDialog(form: IPageForm, onFormChanged: (form: IPageF
         };
         const extInfo = VSS.getExtensionContext();
         const options: IEditFormContext = {
-            form
+            form,
+            definitions
         };
 
         const contentContribution = `${extInfo.publisherId}.${extInfo.extensionId}.edit-form`;

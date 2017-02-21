@@ -5,7 +5,7 @@ import {
     IPageGroup,
     IPageControl,
     IFieldDefinition,
-    IFieldDefintions
+    IFieldDefinitions
 } from "./pageContracts";
 import { IColumnProperties, IControlProperties, IGroupProperties } from "./renderEditFormContracts";
 import * as React from "react";
@@ -15,11 +15,34 @@ import { ButtonType } from "OfficeFabric/components/Button";
 import { Label } from "OfficeFabric/components/Label/Label";
 import { TextField } from "OfficeFabric/components/TextField/TextField";
 
-const configuration: IEditFormContext = VSS.getConfiguration();
-const form = configuration.form;
+const config: IEditFormContext = VSS.getConfiguration();
+const form = config.form;
+const definitions = Object.keys(config.definitions).map(k => config.definitions[k]).sort((a, b) => a.name.localeCompare(b.name));
 
-class GroupColumn extends React.Component<{options: IGroupProperties }, void> {
+class Control extends React.Component<{options: IControlProperties }, void> {
     render() {
+        return (
+            <div className="control">{this.props.options.control.label}</div>
+        );
+    }
+}
+
+class Group extends React.Component<{options: IGroupProperties }, void> {
+    render() {
+        const controls = this.props.options.group.controls.map((control, controlIndex) => 
+            <Control options={$.extend({control, controlIndex}, this.props.options)}/>
+        );
+        controls.push(<div className="control">
+            <Button
+                buttonType={ButtonType.hero}
+                icon="Add"
+                onClick={() => {
+                    const opts = this.props.options;
+                    const defaultField = definitions[0];
+                    form.columns[opts.columnIndex].groups[opts.groupIndex].controls.push({ label: defaultField.name, referenceName: defaultField.referenceName });
+                    renderEditPage();
+                }}>{"Add Control"}</Button>
+        </div>);
         return (
             <div className="group">
                 <div className="group-header">
@@ -34,14 +57,15 @@ class GroupColumn extends React.Component<{options: IGroupProperties }, void> {
                             renderEditPage();
                         }}/>
                 </div>
+                {controls}
             </div>
         );
     }
 }
-class PageColumn extends React.Component<{options: IColumnProperties }, void> {
+class Column extends React.Component<{options: IColumnProperties }, void> {
     render() {
         const groups = this.props.options.column.groups.map((group, groupIndex) => 
-            <GroupColumn options={$.extend({group, groupIndex}, this.props.options)}/>
+            <Group options={$.extend({group, groupIndex}, this.props.options)}/>
         );
         groups.push(<div className="group">
             <Button
@@ -75,7 +99,7 @@ class PageColumn extends React.Component<{options: IColumnProperties }, void> {
 class PageForm extends React.Component<{form: IPageForm}, void> {
     render() {
         const columns: JSX.Element[] = this.props.form.columns.map((column, columnIndex) =>
-            <PageColumn options={{column, columnIndex}} />
+            <Column options={{column, columnIndex}} />
         );
         columns.push(
             <div className="column">

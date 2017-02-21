@@ -4,7 +4,7 @@ import {
     IPageGroup,
     IPageControl,
     IFieldDefinition,
-    IFieldDefintions
+    IFieldDefinitions
 } from "./pageContracts";
 
 export interface IColumnProperties {
@@ -18,6 +18,6 @@ export interface IGroupProperties extends IColumnProperties {
 }
 
 export interface IControlProperties extends IGroupProperties {
-    control: IPageGroup;
+    control: IPageControl;
     controlIndex: number;
 }
