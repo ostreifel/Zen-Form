@@ -11,6 +11,7 @@ import {
 import { FieldType } from "TFS/WorkItemTracking/Contracts";
 import { DatePicker, DayOfWeek } from "OfficeFabric/components/DatePicker";
 import { TextField } from "OfficeFabric/components/TextField";
+import { Toggle } from "OfficeFabric/components/Toggle";
 import { Label } from "OfficeFabric/components/Label";
 import { PrimaryButton } from "OfficeFabric/components/Button";
 import { RichEditor } from "VSS/Controls/RichEditor";
@@ -77,21 +78,29 @@ class PageControl extends React.Component<{
             />;
             break;
             case FieldType.DateTime:
-            return (
-                <DatePicker
+            controlValue = <DatePicker
                     label={labelText}
+                    allowTextInput={true}
                     firstDayOfWeek={ DayOfWeek.Sunday }
                     strings={ datePickerStrings }
                     value={typeof fieldValue === undefined || fieldValue === null ? null : new Date(fieldValue)}
-                />
-            );
+            />;
+            break;
+            case FieldType.Boolean:
+            controlValue = <Toggle
+                    label={labelText}
+                    className="control-value"
+                    title={helpText}
+                    defaultChecked={fieldValue as boolean}
+            />;
+            break;
             /**
              * TODO more field types here
              * Types to Support
              * - Combo String
              * - identity
              * - discussion (sort of html)
-             * - boolean
+             * - tree path
              */
             default:
             controlValue = <div className="control-value">
