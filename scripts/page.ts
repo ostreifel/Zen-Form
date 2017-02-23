@@ -32,6 +32,7 @@ export class Page implements IWorkItemNotificationListener {
 
 
     private readonly fieldDefinitions: IFieldDefinitions = {};
+    private form?: IPageForm;
     private constructor(readonly container: JQuery,
                         readonly service: IWorkItemFormService,
                         readonly witFields: WorkItemField[],
@@ -56,14 +57,28 @@ export class Page implements IWorkItemNotificationListener {
         });
     }
     public onLoaded(workItemLoadedArgs: IWorkItemLoadedArgs): void {
-        getForm(this.wit).then(form => this.renderPage(form));
+        getForm(this.wit).then(form => {
+            this.form = form;
+            this.renderPage(form);
+        });
     }
-    public onFieldChanged(fieldChangedArgs: IWorkItemFieldChangedArgs): void { }
+    private onPageFieldChange(refName: string, value) {
+        console.log("updating field", refName, value);
+        this.service.setFieldValue(refName, value);
+    }
+    public onFieldChanged(fieldChangedArgs: IWorkItemFieldChangedArgs): void {
+        this.renderPage(this.form);
+     }
     public onSaved(savedEventArgs: IWorkItemChangedArgs): void { }
     public onRefreshed(refreshEventArgs: IWorkItemChangedArgs): void {
-        getForm(this.wit).then(form => this.renderPage(form));
+        getForm(this.wit).then(form => {
+            this.form = form;
+            this.renderPage(form);
+        });
      }
-    public onReset(undoEventArgs: IWorkItemChangedArgs): void { }
+    public onReset(undoEventArgs: IWorkItemChangedArgs): void {
+        this.renderPage(this.form);
+     }
     public onUnloaded(unloadedEventArgs: IWorkItemChangedArgs): void { }
 
     private openDialog(form: IPageForm) {
@@ -74,7 +89,7 @@ export class Page implements IWorkItemNotificationListener {
     }
     private renderPage(form: IPageForm) {
         this.getWitFieldValues().then(values => {
-            renderPage(form, this.fieldDefinitions, values, () => this.openDialog(form));
+            renderPage(form, this.fieldDefinitions, values, () => this.openDialog(form), this.onPageFieldChange.bind(this));
         });
     }
 }

@@ -82,30 +82,6 @@ function fromOobForm(wit: WorkItemType): IPageForm {
     }
     console.log("using converted form", form);
     return form;
-    // const mockForm: IPageForm = { version: 1, id: "mock-form", columns: [{
-    //     groups: [{
-    //         label: "Group1",
-    //         controls: [{
-    //             label: "Title Field",
-    //             referenceName: "System.Title"
-    //         }]
-    //     }, {
-    //         label: "Group2",
-    //         controls: [{
-    //             label: "Title Field2",
-    //             referenceName: "System.Title"
-    //         }]
-    //     }]
-    // }, {
-    //     groups: [{
-    //         label: "Group3",
-    //         controls: [{
-    //             label: "Title Field3",
-    //             referenceName: "System.Title"
-    //         }]
-    //     }]
-    // }]};
-    // return mockForm;
 }
 
 export function saveForm(form: IPageForm, wit: WorkItemType): IPromise<IPageForm> {

@@ -14,7 +14,7 @@ import { TextField } from "OfficeFabric/components/TextField";
 import { Toggle } from "OfficeFabric/components/Toggle";
 import { Label } from "OfficeFabric/components/Label";
 import { PrimaryButton } from "OfficeFabric/components/Button";
-import { RichEditor } from "VSS/Controls/RichEditor";
+import { RichEditor, IRichEditorOptions } from "VSS/Controls/RichEditor";
 import { BaseControl } from "VSS/Controls";
 import { datePickerStrings } from "./datePickerConsts";
 
@@ -22,7 +22,8 @@ import { datePickerStrings } from "./datePickerConsts";
 class PageControl extends React.Component<{
     control: IPageControl,
     definitions: IFieldDefinitions,
-    values: IFieldValues
+    values: IFieldValues,
+    onFieldChange: (refName: string, value) => void
 }, void> {
     static counter = 0;
     private richEditor: RichEditor;
@@ -32,6 +33,7 @@ class PageControl extends React.Component<{
         const referenceName = this.props.control.referenceName;
         const field = this.props.definitions[referenceName];
         const fieldValue = this.props.values[referenceName];
+        const onChange = this.props.onFieldChange;
         const fieldType = field && field.type;
         const helpText = field && field.helpText;
         const labelText = this.props.control.label;
@@ -51,7 +53,11 @@ class PageControl extends React.Component<{
                     contentEditable={true}
                     ref={elem => {
                         if (elem && elem.children.length === 0) {
-                            this.richEditor = BaseControl.createIn(RichEditor, $("<div/>")) as RichEditor;
+                            const richEditorOpts: IRichEditorOptions = {
+                                internal: false,
+                                change: textArea => onChange(referenceName, textArea.val())
+                            };
+                            this.richEditor = BaseControl.createIn(RichEditor, $("<div/>"), richEditorOpts) as RichEditor;
                             elem.appendChild(this.richEditor._element[0]);
                         }
                         this.richEditor.ready(() => this.richEditor.setValue(fieldValue));
@@ -65,6 +71,7 @@ class PageControl extends React.Component<{
                 value={typeof fieldValue === undefined || fieldValue === null ? "" : String(fieldValue)}
                 label={labelText}
                 title={helpText}
+                onChange={value => onChange(referenceName, Number(value))}
                 onGetErrorMessage={value => value === "" || value.match(/^\d+$/) ? "" : "Value must be a integer"}
             />;
             break;
@@ -74,6 +81,7 @@ class PageControl extends React.Component<{
                 value={typeof fieldValue === undefined || fieldValue === null ? "" : String(fieldValue)}
                 label={labelText}
                 title={helpText}
+                onChange={value => onChange(referenceName, Number(value))}
                 onGetErrorMessage={value => value === "" || value.match(/^\d*\.?\d*$/) ? "" : "Value must be a double"}
             />;
             break;
@@ -83,6 +91,7 @@ class PageControl extends React.Component<{
                     allowTextInput={true}
                     firstDayOfWeek={ DayOfWeek.Sunday }
                     strings={ datePickerStrings }
+                    onSelectDate={value => onChange(referenceName, value)}
                     value={typeof fieldValue === undefined || fieldValue === null ? null : new Date(fieldValue)}
             />;
             break;
@@ -91,6 +100,10 @@ class PageControl extends React.Component<{
                     label={labelText}
                     className="control-value"
                     title={helpText}
+                    onChanged={value => {
+                        console.log("toggle changed");
+                        onChange(referenceName, value);
+                    }}
                     defaultChecked={fieldValue as boolean}
             />;
             break;
@@ -120,14 +133,16 @@ class PageControl extends React.Component<{
 class PageGroup extends React.Component<{
     group: IPageGroup,
     definitions: IFieldDefinitions,
-    values: IFieldValues
+    values: IFieldValues,
+    onFieldChange: (refName: string, value) => void
 }, void> {
     render() {
         const groupElems = this.props.group.controls.map(control =>
             <PageControl
                 control={control}
                 definitions={this.props.definitions}
-                values={this.props.values} />);
+                values={this.props.values}
+                onFieldChange={this.props.onFieldChange} />);
         if (this.props.group.label) {
             groupElems.unshift(
                 <Label className="page-group-label">{this.props.group.label}</Label>
@@ -144,14 +159,16 @@ class PageGroup extends React.Component<{
 class PageColumn extends React.Component<{
     column: IPageColumn,
     definitions: IFieldDefinitions,
-    values: IFieldValues
+    values: IFieldValues,
+    onFieldChange: (refName: string, value) => void
 }, void> {
     render() {
         let groups = this.props.column.groups.map(group =>
             <PageGroup
                 group={group}
                 definitions={this.props.definitions}
-                values={this.props.values} />);
+                values={this.props.values}
+                onFieldChange={this.props.onFieldChange} />);
         return (
             <div className="page-column">
                 {groups}
@@ -161,17 +178,19 @@ class PageColumn extends React.Component<{
 }
 
 class PageForm extends React.Component<{
-    form: IPageForm;
-    definitions: IFieldDefinitions;
-    values: IFieldValues;
-    openEditFormDialog: () => void;
+    form: IPageForm,
+    definitions: IFieldDefinitions,
+    values: IFieldValues,
+    openEditFormDialog: () => void,
+    onFieldChange: (refName: string, value) => void
 }, void> {
     render() {
         let columns = this.props.form.columns.map( column =>
             <PageColumn
                 column={column}
                 definitions={this.props.definitions}
-                values={this.props.values} />
+                values={this.props.values}
+                onFieldChange={this.props.onFieldChange} />
         );
         return (
             <div className="page-form">
@@ -208,10 +227,12 @@ class PageHeader extends React.Component<{
 export function renderPage(workItemForm: IPageForm,
                            definitions: IFieldDefinitions,
                            values: IFieldValues,
-                           openEditFormDialog: () => void) {
+                           openEditFormDialog: () => void,
+                           onFieldChange: (refName: string, value) => void) {
     ReactDOM.render(<PageForm
         form={workItemForm}
         definitions={definitions}
         values={values}
-        openEditFormDialog={openEditFormDialog} />, document.getElementById("page-wrapper"));
+        openEditFormDialog={openEditFormDialog}
+        onFieldChange={onFieldChange} />, document.getElementById("page-wrapper"));
 }
