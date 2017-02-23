@@ -17,11 +17,11 @@ body.page-body {
             }
             .page-control {
                 input[type=text] {
-                    max-width: 800px;
+                    width: 300px;
                 }
                 .control-value {
                     .html-value {
-                        min-height: 31px;
+                        min-width: 600px;
                         border: 1px solid lightgray;
                     }
                 }

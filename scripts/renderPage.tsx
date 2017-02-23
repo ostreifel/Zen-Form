@@ -12,7 +12,8 @@ import { FieldType } from "TFS/WorkItemTracking/Contracts";
 import { TextField } from "OfficeFabric/components/TextField/TextField";
 import { Label } from "OfficeFabric/components/Label/Label";
 import { PrimaryButton } from "OfficeFabric/components/Button/PrimaryButton/PrimaryButton";
-
+import { RichEditor } from "VSS/Controls/RichEditor";
+import { BaseControl } from "VSS/Controls";
 
 class PageControl extends React.Component<{
     control: IPageControl,
@@ -20,6 +21,7 @@ class PageControl extends React.Component<{
     values: IFieldValues
 }, void> {
     static counter = 0;
+    private richEditor: RichEditor;
     render() {
         let controlValue: JSX.Element;
 
@@ -38,11 +40,19 @@ class PageControl extends React.Component<{
                 title={helpText} />;
             break;
             case FieldType.Html:
+
             controlValue = <div className="control-value">
                 <Label title={helpText}>{labelText}</Label>
                 <div className="html-value"
                     contentEditable={true}
-                    dangerouslySetInnerHTML={{ __html: fieldValue as string }}></div>
+                    ref={elem => {
+                        if (elem && elem.children.length === 0) {
+                            this.richEditor = BaseControl.createIn(RichEditor, $("<div/>")) as RichEditor;
+                            elem.appendChild(this.richEditor._element[0])
+                        }
+                        this.richEditor.ready(() => this.richEditor.setValue(fieldValue))
+                    }}
+                    ></div>
             </div>;
             break;
             case FieldType.Integer:
