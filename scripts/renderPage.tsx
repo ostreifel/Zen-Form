@@ -47,7 +47,10 @@ class PageControl extends React.Component<{
                         if (elem && elem.children.length === 0) {
                             const richEditorOpts: IRichEditorOptions = {
                                 internal: false,
-                                change: textArea => onChange(referenceName, textArea.val())
+                                change: textArea => {
+                                    console.log(textArea);
+                                    onChange(referenceName, this.richEditor.getValue());
+                                }
                             };
                             this.richEditor = BaseControl.createIn(RichEditor, $("<div/>"), richEditorOpts) as RichEditor;
                             elem.appendChild(this.richEditor._element[0]);
