@@ -38,15 +38,7 @@ class PageControl extends React.Component<{
         const helpText = field && field.helpText;
         const labelText = this.props.control.label;
         switch (fieldType) {
-            case FieldType.String:
-            controlValue = <TextField
-                className="control-value"
-                value={fieldValue as string}
-                label={labelText}
-                title={helpText} />;
-            break;
             case FieldType.Html:
-
             controlValue = <div className="control-value">
                 <Label title={helpText}>{labelText}</Label>
                 <div className="html-value"
@@ -65,14 +57,27 @@ class PageControl extends React.Component<{
                     ></div>
             </div>;
             break;
+            case FieldType.String:
+            controlValue = <TextField
+                className="control-value"
+                value={fieldValue as string}
+                label={labelText}
+                onChanged={value => onChange(referenceName, value)}
+                title={helpText} />;
+            break;
             case FieldType.Integer:
             controlValue = <TextField
                 className="control-value"
                 value={typeof fieldValue === undefined || fieldValue === null ? "" : String(fieldValue)}
                 label={labelText}
                 title={helpText}
-                onChange={value => onChange(referenceName, Number(value))}
-                onGetErrorMessage={value => value === "" || value.match(/^\d+$/) ? "" : "Value must be a integer"}
+                onChanged={value => onChange(referenceName, value)}
+                onGetErrorMessage={value => {
+                    if (value !== fieldValue) {
+                        onChange(referenceName, value);
+                    }
+                    return value === "" || value.match(/^\d+$/) ? "" : "Value must be a integer";
+                }}
             />;
             break;
             case FieldType.Double:
@@ -81,8 +86,13 @@ class PageControl extends React.Component<{
                 value={typeof fieldValue === undefined || fieldValue === null ? "" : String(fieldValue)}
                 label={labelText}
                 title={helpText}
-                onChange={value => onChange(referenceName, Number(value))}
-                onGetErrorMessage={value => value === "" || value.match(/^\d*\.?\d*$/) ? "" : "Value must be a double"}
+                onChanged={value => onChange(referenceName, value)}
+                onGetErrorMessage={value => {
+                    if (value !== fieldValue) {
+                        onChange(referenceName, value);
+                    }
+                    return value === "" || value.match(/^\d*\.?\d*$/) ? "" : "Value must be a double";
+                }}
             />;
             break;
             case FieldType.DateTime:
@@ -104,7 +114,7 @@ class PageControl extends React.Component<{
                         console.log("toggle changed");
                         onChange(referenceName, value);
                     }}
-                    defaultChecked={fieldValue as boolean}
+                    checked={fieldValue as boolean}
             />;
             break;
             /**

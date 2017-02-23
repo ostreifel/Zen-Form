@@ -67,6 +67,7 @@ export class Page implements IWorkItemNotificationListener {
         this.service.setFieldValue(refName, value);
     }
     public onFieldChanged(fieldChangedArgs: IWorkItemFieldChangedArgs): void {
+        console.log("fields changed", fieldChangedArgs);
         this.renderPage(this.form);
      }
     public onSaved(savedEventArgs: IWorkItemChangedArgs): void { }
@@ -89,6 +90,7 @@ export class Page implements IWorkItemNotificationListener {
     }
     private renderPage(form: IPageForm) {
         this.getWitFieldValues().then(values => {
+            console.log("rendering field with values", values);
             renderPage(form, this.fieldDefinitions, values, () => this.openDialog(form), this.onPageFieldChange.bind(this));
         });
     }
