@@ -9,11 +9,14 @@ import {
     IFieldValues
 } from "./pageContracts";
 import { FieldType } from "TFS/WorkItemTracking/Contracts";
-import { TextField } from "OfficeFabric/components/TextField/TextField";
-import { Label } from "OfficeFabric/components/Label/Label";
-import { PrimaryButton } from "OfficeFabric/components/Button/PrimaryButton/PrimaryButton";
+import { DatePicker, DayOfWeek } from "OfficeFabric/components/DatePicker";
+import { TextField } from "OfficeFabric/components/TextField";
+import { Label } from "OfficeFabric/components/Label";
+import { PrimaryButton } from "OfficeFabric/components/Button";
 import { RichEditor } from "VSS/Controls/RichEditor";
 import { BaseControl } from "VSS/Controls";
+import { datePickerStrings } from "./datePickerConsts";
+
 
 class PageControl extends React.Component<{
     control: IPageControl,
@@ -26,7 +29,7 @@ class PageControl extends React.Component<{
         let controlValue: JSX.Element;
 
         const referenceName = this.props.control.referenceName;
-        const field = this.props.definitions[referenceName]
+        const field = this.props.definitions[referenceName];
         const fieldValue = this.props.values[referenceName];
         const fieldType = field && field.type;
         const helpText = field && field.helpText;
@@ -48,9 +51,9 @@ class PageControl extends React.Component<{
                     ref={elem => {
                         if (elem && elem.children.length === 0) {
                             this.richEditor = BaseControl.createIn(RichEditor, $("<div/>")) as RichEditor;
-                            elem.appendChild(this.richEditor._element[0])
+                            elem.appendChild(this.richEditor._element[0]);
                         }
-                        this.richEditor.ready(() => this.richEditor.setValue(fieldValue))
+                        this.richEditor.ready(() => this.richEditor.setValue(fieldValue));
                     }}
                     ></div>
             </div>;
@@ -73,6 +76,15 @@ class PageControl extends React.Component<{
                 onGetErrorMessage={value => value === "" || value.match(/^\d*\.?\d*$/) ? "" : "Value must be a double"}
             />;
             break;
+            case FieldType.DateTime:
+            return (
+                <DatePicker
+                    label={labelText}
+                    firstDayOfWeek={ DayOfWeek.Sunday }
+                    strings={ datePickerStrings }
+                    value={typeof fieldValue === undefined || fieldValue === null ? null : new Date(fieldValue)}
+                />
+            );
             /**
              * TODO more field types here
              * Types to Support
