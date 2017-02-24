@@ -2,7 +2,7 @@ import { IPageForm, IFieldValues, IFieldDefinitions } from "./pageContracts";
 import { WorkItemType } from "TFS/WorkItemTracking/Contracts";
 import * as Q from "q";
 
-const formCollection = "customFormCollection";
+const formCollection = "custom-form-collection2";
 
 function getFormId(wit: WorkItemType) {
     const webContext = VSS.getWebContext();
@@ -35,6 +35,7 @@ function fromOobForm(wit: WorkItemType): IPageForm {
     const form: IPageForm = {
         version: 1,
         id: getFormId(wit),
+        __etag: -1,
         columns: $.map(columns, column => {
             return {
                 groups: $.map($(column).find("Group[Label]"), (group: Node) => {
@@ -85,6 +86,6 @@ function fromOobForm(wit: WorkItemType): IPageForm {
 
 export function saveForm(form: IPageForm, wit: WorkItemType): IPromise<IPageForm> {
     return VSS.getService(VSS.ServiceIds.ExtensionData).then((dataService: IExtensionDataService) => {
-        return dataService.setDocument(formCollection, form)
+        return dataService.setDocument(formCollection, form);
     });
 }

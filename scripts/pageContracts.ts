@@ -5,6 +5,7 @@ export interface IPageForm {
     version: number;
     id: string;
     description?: string;
+    __etag: -1;
     columns: IPageColumn[];
 }
 export interface IPageColumn {
