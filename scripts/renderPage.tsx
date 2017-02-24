@@ -229,7 +229,7 @@ class PageHeader extends React.Component<{
                     onClick={this.props.openEditFormDialog}>
                         {"Customize Page"}
                 </PrimaryButton>
-                <Label className="form-scope-label">{`Viewing as ${webContext.project.name}\\${webContext.team.name}`}</Label>
+                <Label className="form-scope-label">{`Viewing as ${webContext.team.name}`}</Label>
                 <div className="feedback">
                     <a href={"https://marketplace.visualstudio.com/items?itemName=ottostreifel.customize-team-form"} target={"_blank"}>Review</a>{" | "}
                     <a href={"https://github.com/ostreifel/zen-form/issues"} target={"_blank"}>Report an issue</a>

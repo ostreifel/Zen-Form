@@ -2,7 +2,7 @@ import { IPageForm, IFieldValues, IFieldDefinitions } from "./pageContracts";
 import { WorkItemType } from "TFS/WorkItemTracking/Contracts";
 import * as Q from "q";
 
-const formCollection = "formCollection";
+const formCollection = "customFormCollection";
 
 function getFormId(wit: WorkItemType) {
     const webContext = VSS.getWebContext();
@@ -35,7 +35,6 @@ function fromOobForm(wit: WorkItemType): IPageForm {
     const form: IPageForm = {
         version: 1,
         id: getFormId(wit),
-        description: "Converted from xml form",
         columns: $.map(columns, column => {
             return {
                 groups: $.map($(column).find("Group[Label]"), (group: Node) => {
@@ -85,9 +84,7 @@ function fromOobForm(wit: WorkItemType): IPageForm {
 }
 
 export function saveForm(form: IPageForm, wit: WorkItemType): IPromise<IPageForm> {
-    return Q(form);
-    // Don't push test forms to storage just yet
-    // return VSS.getService(VSS.ServiceIds.ExtensionData).then((dataService: IExtensionDataService) => {
-    //     return dataService.createDocument(formCollection, form)
-    // });
+    return VSS.getService(VSS.ServiceIds.ExtensionData).then((dataService: IExtensionDataService) => {
+        return dataService.setDocument(formCollection, form)
+    });
 }

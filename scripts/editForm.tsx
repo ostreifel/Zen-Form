@@ -25,12 +25,14 @@ class Control extends React.Component<{options: IControlProperties }, {showDialo
                 draggable
                 onDragStart={ev => {
                     ev.dataTransfer.setData("text/plain", JSON.stringify(this.props.options));
+                    ev.stopPropagation();
                 }}
                 onDrop={ev => {
                     const dropped: IControlProperties = JSON.parse(ev.dataTransfer.getData("text/plain"));
                     // check if control or group
                     if ("control" in dropped) {
                         ev.stopPropagation();
+                        ev.preventDefault();
                     } else {
                         return;
                     }
@@ -138,6 +140,7 @@ class Group extends React.Component<{options: IGroupProperties }, {showDialog: b
                 draggable
                 onDragStart={ev => {
                     ev.dataTransfer.setData("text/plain", JSON.stringify(this.props.options));
+                    ev.stopPropagation();
                 }}
                 onDragOver={ev => ev.preventDefault()}
                 onDrop={ev => {
@@ -146,6 +149,7 @@ class Group extends React.Component<{options: IGroupProperties }, {showDialog: b
                     if ("control" in dropped) {
                         return;
                     } else {
+                        ev.preventDefault();
                         ev.stopPropagation();
                     }
                     const curr = this.props.options;
@@ -164,6 +168,7 @@ class Group extends React.Component<{options: IGroupProperties }, {showDialog: b
                         const dropped: IControlProperties = JSON.parse(ev.dataTransfer.getData("text/plain"));
                         // check if control or group
                         if ("control" in dropped) {
+                            ev.preventDefault();
                             ev.stopPropagation();
                         } else {
                             return;
@@ -255,6 +260,7 @@ class Column extends React.Component<{options: IColumnProperties }, void> {
                         if ("control" in dropped) {
                             return;
                         } else {
+                            ev.preventDefault();
                             ev.stopPropagation();
                         }
                         const curr = this.props.options;
