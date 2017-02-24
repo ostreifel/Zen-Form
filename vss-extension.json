@@ -1,7 +1,7 @@
 {
     "manifestVersion": 1,
     "id": "customize-team-form",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "name": "Zen Form",
     "scopes": [ "vso.work", "vso.work_write" ],
     "description": "Create team specific form customizations.",
@@ -21,6 +21,10 @@
         "details": {
             "path": "details.md"
         }
+    },
+    "repository": {
+        "type": "git",
+        "uri": "https://github.com/ostreifel/Zen-Form"
     },
     "branding": {
         "color": "rgb(220, 235, 252)",
