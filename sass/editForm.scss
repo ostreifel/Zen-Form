@@ -19,23 +19,63 @@ body.edit-page-body {
             }
             overflow: hidden;
         }
-        .group {
+        .group:not(.add) {
             margin-bottom: 40px;
+            border: 1px solid #f4f4f4;
+            > div {
+                padding: 2px;
+            }
             .group-header {
                 overflow: hidden;
+                background-color: #FBFBFB;
                 .group-label {
                     float: left;
                     margin-right: 10px;
+                    background-color: initial;
+                    border: initial;
+                    &:hover {
+                        background-color: #f4f4f4;
+                    }
+                    &:focus {
+                        border: 1px solid #f4f4f4
+                    }
+                    &:active {
+                        background-color: #005a9e;
+                    }
                 }
                 button {
                     float: right;
                 }
             }
-            .control {
+            button.remove {
+                background-color: initial;
+                border: initial;
+                &:hover {
+                    background-color: #f4f4f4;
+                }
+                &:focus {
+                    border: 1px solid #f4f4f4
+                }
+                &:active {
+                    background-color: #005a9e;
+                }
+            }
+            .control:not(.add) {
                 overflow: hidden;
                 margin-bottom: 5px;
                 button.control-button {
                     margin-right: 10px;
+                    background-color: initial;
+                    border: none;
+                    &:hover {
+                        background-color: #f4f4f4;
+                    }
+                    &:focus {
+                        border: 1px solid #f4f4f4
+                    }
+                    &:active {
+                        background-color: #005a9e;
+                    }
                 }
                 button.control-remove {
                     float: right;
