@@ -1,7 +1,7 @@
 {
     "manifestVersion": 1,
     "id": "customize-team-form",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "name": "Zen Form",
     "scopes": [ "vso.work", "vso.work_write" ],
     "description": "Create team specific form customizations.",
@@ -15,7 +15,7 @@
         }
     ],
     "tags": [
-        "Sample"
+        "Work Item", "Form", "Customize", "Team"
     ],
     "content": {
         "details": {
@@ -49,7 +49,7 @@
         }
     ],
     "categories": [
-        "Integrate"
+        "Plan and track"
     ],
     "contributions": [
         {  
