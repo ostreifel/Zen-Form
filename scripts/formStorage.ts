@@ -85,6 +85,7 @@ function fromOobForm(wit: WorkItemType): IPageForm {
 }
 
 export function saveForm(form: IPageForm, wit: WorkItemType): IPromise<IPageForm> {
+    form.__etag = -1;
     return VSS.getService(VSS.ServiceIds.ExtensionData).then((dataService: IExtensionDataService) => {
         return dataService.setDocument(formCollection, form);
     });
