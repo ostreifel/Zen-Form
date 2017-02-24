@@ -36,7 +36,7 @@ class Control extends React.Component<{options: IControlProperties }, {showDialo
                         form.columns[opts.columnIndex].groups[opts.groupIndex].controls.splice(opts.columnIndex, 1);
                         renderEditPage();
                     }}/>
-                
+
                 <Dialog
                     isOpen={ this.state.showDialog }
                     type={ DialogType.normal }
@@ -60,7 +60,7 @@ class Control extends React.Component<{options: IControlProperties }, {showDialo
                         }}
                         label="Backing field"
                         />
-                        
+
                     <DialogFooter>
                         <Button buttonType={ ButtonType.primary } onClick={ () => this._saveControl() }>Save</Button>
                         <Button onClick={ () => this._closeDialog() }>Cancel</Button>
