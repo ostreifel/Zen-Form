@@ -14,14 +14,33 @@ const form = config.form;
 const definitionsMap = config.definitions;
 const definitionsArr = Object.keys(config.definitions).map(k => config.definitions[k]).sort((a, b) => a.name.localeCompare(b.name));
 
-class Control extends React.Component<{options: IControlProperties }, {showDialog: boolean, label?: string, refName?: string}> {
+class Control extends React.Component<{options: IControlProperties }, {showDialog?: boolean, dragging?: boolean, label?: string, refName?: string}> {
     constructor() {
         super();
-        this.state = {showDialog: false};
+        this.state = {};
     }
     render() {
         return (
-            <div className="control">
+            <div className="control"
+                draggable
+                onDragStart={ev => {
+                    ev.dataTransfer.setData("text/plain", JSON.stringify(this.props.options));
+                }}
+                onDrop={ev => {
+                    const dropped: IControlProperties = JSON.parse(ev.dataTransfer.getData("text/plain"));
+                    const curr = this.props.options;
+                    let droppedControlIndex = dropped.controlIndex;
+                    if (dropped.columnIndex === curr.columnIndex &&
+                        curr.groupIndex === curr.groupIndex &&
+                        curr.controlIndex < dropped.columnIndex) {
+                        droppedControlIndex += 1;
+                    }
+                    form.columns[curr.columnIndex].groups[curr.groupIndex].controls.splice(curr.controlIndex + 1, 0, dropped.control);
+                    form.columns[dropped.columnIndex].groups[dropped.groupIndex].controls.splice(droppedControlIndex, 1);
+                    renderEditPage();
+                }}
+                onDragOver={ev => ev.preventDefault()}
+            >
                 <Button
                     className="control-button"
                     onClick={() => this._showDialog()}
@@ -110,7 +129,21 @@ class Group extends React.Component<{options: IGroupProperties }, {showDialog: b
         </div>);
         return (
             <div className="group">
-                <div className="group-header">
+                <div className="group-header"
+                    onDrop={ev => {
+                        const dropped: IControlProperties = JSON.parse(ev.dataTransfer.getData("text/plain"));
+                        const curr = this.props.options;
+                        let droppedControlIndex = dropped.controlIndex;
+                        if (dropped.columnIndex === curr.columnIndex &&
+                            curr.groupIndex === curr.groupIndex) {
+                            droppedControlIndex += 1;
+                        }
+                        form.columns[curr.columnIndex].groups[curr.groupIndex].controls.splice(0, 0, dropped.control);
+                        form.columns[dropped.columnIndex].groups[dropped.groupIndex].controls.splice(droppedControlIndex, 1);
+                        renderEditPage();
+                    }}
+                    onDragOver={ev => ev.preventDefault()}
+                >
                     <Button
                         className="group-label"
                         onClick={() => this._showDialog()}

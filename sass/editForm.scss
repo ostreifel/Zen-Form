@@ -63,6 +63,12 @@ body.edit-page-body {
             .control:not(.add) {
                 overflow: hidden;
                 margin-bottom: 5px;
+                &.dragging * {
+                    visibility: hidden;
+                }
+                &:hover {
+                    background-color: #eff6fc;
+                }
                 button.control-button {
                     margin-right: 10px;
                     background-color: initial;
