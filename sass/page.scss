@@ -3,8 +3,17 @@ body.page-body {
 }
 .page-form {
     .page-header {
+        overflow: hidden;
+        .open-dialog-button {
+            float: left;
+        }
+        .form-scope-label {
+            margin-left: 20px;
+            float: left;
+        }
         .feedback {
             float: right;
+            margin-right: 10px
         }
     }
     .page-column {
