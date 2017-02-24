@@ -28,6 +28,12 @@ class Control extends React.Component<{options: IControlProperties }, {showDialo
                 }}
                 onDrop={ev => {
                     const dropped: IControlProperties = JSON.parse(ev.dataTransfer.getData("text/plain"));
+                    // check if control or group
+                    if ("control" in dropped) {
+                        ev.stopPropagation();
+                    } else {
+                        return;
+                    }
                     const curr = this.props.options;
                     let droppedControlIndex = dropped.controlIndex;
                     if (dropped.columnIndex === curr.columnIndex &&
@@ -128,10 +134,40 @@ class Group extends React.Component<{options: IGroupProperties }, {showDialog: b
                 }}>{"Add Control"}</Button>
         </div>);
         return (
-            <div className="group">
+            <div className="group"
+                draggable
+                onDragStart={ev => {
+                    ev.dataTransfer.setData("text/plain", JSON.stringify(this.props.options));
+                }}
+                onDragOver={ev => ev.preventDefault()}
+                onDrop={ev => {
+                    const dropped: IGroupProperties = JSON.parse(ev.dataTransfer.getData("text/plain"));
+                    // check if control or group
+                    if ("control" in dropped) {
+                        return;
+                    } else {
+                        ev.stopPropagation();
+                    }
+                    const curr = this.props.options;
+                    let droppedGroupIndex = dropped.groupIndex;
+                    if (curr.columnIndex === dropped.columnIndex &&
+                        curr.groupIndex < dropped.groupIndex) {
+                        droppedGroupIndex += 1;
+                    }
+                    form.columns[curr.columnIndex].groups.splice(curr.groupIndex + 1, 0, dropped.group);
+                    form.columns[dropped.columnIndex].groups.splice(droppedGroupIndex, 1);
+                    renderEditPage();
+                }}
+            >
                 <div className="group-header"
                     onDrop={ev => {
                         const dropped: IControlProperties = JSON.parse(ev.dataTransfer.getData("text/plain"));
+                        // check if control or group
+                        if ("control" in dropped) {
+                            ev.stopPropagation();
+                        } else {
+                            return;
+                        }
                         const curr = this.props.options;
                         let droppedControlIndex = dropped.controlIndex;
                         if (dropped.columnIndex === curr.columnIndex &&
@@ -211,7 +247,25 @@ class Column extends React.Component<{options: IColumnProperties }, void> {
         </div>);
         return (
             <div className="column">
-                <div className="column-header">
+                <div className="column-header"
+                    onDragOver={ev => ev.preventDefault()}
+                    onDrop={ev => {
+                        const dropped: IGroupProperties = JSON.parse(ev.dataTransfer.getData("text/plain"));
+                        // check if control or group
+                        if ("control" in dropped) {
+                            return;
+                        } else {
+                            ev.stopPropagation();
+                        }
+                        const curr = this.props.options;
+                        let droppedGroupIndex = dropped.groupIndex;
+                        if (curr.columnIndex === dropped.columnIndex) {
+                            droppedGroupIndex += 1;
+                        }
+                        form.columns[curr.columnIndex].groups.splice(0, 0, dropped.group);
+                        form.columns[dropped.columnIndex].groups.splice(droppedGroupIndex, 1);
+                        renderEditPage();
+                    }}>
                     <Label>{`Column ${this.props.options.columnIndex}`}</Label>
                     <Button
                         buttonType={ButtonType.hero}
