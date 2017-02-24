@@ -1,3 +1,10 @@
-# vsts-extension-ts-seed-simple #
+Customize a page of the work item form on a per team scope.
 
-Describe your extension here. This description will be shown in the marketplace. You can use *Markdown*.
+The form of the new page page defaults to a clone of the field controls on the first page.  
+![](img/defaultForm.png)
+
+Click the "Customize Form" button to bring up the drag and drop customization experience.  
+![](img/editPageForm.png)  
+
+# Change Log
+(02/24/17) v1.0.1 Initial release
