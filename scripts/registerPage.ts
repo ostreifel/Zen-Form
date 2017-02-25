@@ -1,4 +1,4 @@
-import { Page } from "./page";
+import { create } from "./pageFactory";
 import { WorkItemFormService } from "TFS/WorkItemTracking/Services";
 
 // save on ctr + s
@@ -12,4 +12,4 @@ $(window).bind("keydown", function (event: JQueryEventObject) {
 });
 
 // Register context menu action provider
-VSS.register(VSS.getContribution().id, Page.create($(".page")));
+VSS.register(VSS.getContribution().id, create($(".page")));

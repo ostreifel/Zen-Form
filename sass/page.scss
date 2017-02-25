@@ -25,8 +25,15 @@ body.page-body {
                 font-weight: bolder;
             }
             .page-control {
-                input[type=text] {
+                .combo {
                     width: 300px;
+                    border: initial;
+                    &.focus {
+                        border: 1px solid lightgray;
+                    }
+                    &:not(.focus) .drop {
+                        display: none;
+                    }
                 }
                 .control-value {
                     .html-value {

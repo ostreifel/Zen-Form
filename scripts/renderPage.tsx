@@ -15,8 +15,10 @@ import { Toggle } from "OfficeFabric/components/Toggle";
 import { Label } from "OfficeFabric/components/Label";
 import { PrimaryButton } from "OfficeFabric/components/Button";
 import { RichEditor, IRichEditorOptions } from "VSS/Controls/RichEditor";
+import { Combo, IComboOptions } from "VSS/Controls/Combos";
 import { BaseControl } from "VSS/Controls";
 import { datePickerStrings } from "./datePickerConsts";
+import { TagPicker, NormalPeoplePicker } from "OfficeFabric/components/pickers";
 
 
 class PageControl extends React.Component<{
@@ -27,6 +29,7 @@ class PageControl extends React.Component<{
 }, void> {
     static counter = 0;
     private richEditor: RichEditor;
+    private combo: Combo;
     render() {
         let controlValue: JSX.Element;
 
@@ -34,11 +37,13 @@ class PageControl extends React.Component<{
         const field = this.props.definitions[referenceName];
         const fieldValue = this.props.values[referenceName];
         const onChange = this.props.onFieldChange;
-        const fieldType = field && field.type;
-        const helpText = field && field.helpText;
+        const fieldType = field.type;
+        const helpText = field.helpText;
         const labelText = this.props.control.label;
-        switch (fieldType) {
-            case FieldType.Html:
+        const allowedValues = field.allowedValues.map(v => String(v));
+        const fieldValueStr = typeof fieldValue === undefined || fieldValue === null ? "" : String(fieldValue);
+
+        if (fieldType === FieldType.Html) {
             controlValue = <div className="control-value">
                 <Label title={helpText}>{labelText}</Label>
                 <div className="html-value"
@@ -52,63 +57,13 @@ class PageControl extends React.Component<{
                                     onChange(referenceName, this.richEditor.getValue());
                                 }
                             };
-                            this.richEditor = BaseControl.createIn(RichEditor, $("<div/>"), richEditorOpts) as RichEditor;
-                            elem.appendChild(this.richEditor._element[0]);
+                            this.richEditor = BaseControl.createIn(RichEditor, elem, richEditorOpts) as RichEditor;
                         }
                         this.richEditor.ready(() => this.richEditor.setValue(fieldValue));
                     }}
                     ></div>
             </div>;
-            break;
-            case FieldType.String:
-            controlValue = <TextField
-                className="control-value"
-                value={fieldValue as string}
-                label={labelText}
-                onChanged={value => onChange(referenceName, value)}
-                title={helpText} />;
-            break;
-            case FieldType.Integer:
-            controlValue = <TextField
-                className="control-value"
-                value={typeof fieldValue === undefined || fieldValue === null ? "" : String(fieldValue)}
-                label={labelText}
-                title={helpText}
-                onChanged={value => onChange(referenceName, value)}
-                onGetErrorMessage={value => {
-                    if (value !== fieldValue) {
-                        onChange(referenceName, value);
-                    }
-                    return value === "" || value.match(/^\d+$/) ? "" : "Value must be a integer";
-                }}
-            />;
-            break;
-            case FieldType.Double:
-            controlValue = <TextField
-                className="control-value"
-                value={typeof fieldValue === undefined || fieldValue === null ? "" : String(fieldValue)}
-                label={labelText}
-                title={helpText}
-                onChanged={value => onChange(referenceName, value)}
-                onGetErrorMessage={value => {
-                    if (value !== fieldValue) {
-                        onChange(referenceName, value);
-                    }
-                    return value === "" || value.match(/^\d*\.?\d*$/) ? "" : "Value must be a double";
-                }}
-            />;
-            break;
-            case FieldType.DateTime:
-            controlValue = <DatePicker
-                    label={labelText}
-                    allowTextInput={true}
-                    firstDayOfWeek={ DayOfWeek.Sunday }
-                    strings={ datePickerStrings }
-                    onSelectDate={value => onChange(referenceName, value)}
-                    value={typeof fieldValue === undefined || fieldValue === null ? null : new Date(fieldValue)}
-            />;
-            break;
-            case FieldType.Boolean:
+        } else if (fieldType === FieldType.Boolean) {
             controlValue = <Toggle
                     label={labelText}
                     className="control-value"
@@ -119,7 +74,7 @@ class PageControl extends React.Component<{
                     }}
                     checked={fieldValue as boolean}
             />;
-            break;
+        } else {
             /**
              * TODO more field types here
              * Types to Support
@@ -128,11 +83,30 @@ class PageControl extends React.Component<{
              * - discussion (sort of html)
              * - tree path
              */
-            default:
             controlValue = <div className="control-value">
-                {`Unable to render field type ${FieldType[fieldType]} (${referenceName})`}
+                <Label title={helpText}>{labelText}</Label>
+                <div
+                    ref={elem => {
+                        if (elem && elem.children.length === 0) {
+                            const options: IComboOptions = {
+                                    source: allowedValues,
+                                    change: function() {
+                                        const box: Combo = this;
+                                        onChange(referenceName, box.getValue());
+                                    }
+                            };
+                            if (allowedValues.length === 0) {
+                                options.mode = "text";
+                            }
+                            if (fieldType === FieldType.DateTime) {
+                                options.type = "date-time";
+                            }
+                            this.combo = BaseControl.createIn(Combo, elem, options) as Combo;
+                        }
+                        this.combo.setText(fieldValueStr, false);
+                    }}
+                ></div>
             </div>;
-            break;
         }
 
         return (

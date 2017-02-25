@@ -32,4 +32,5 @@ export interface IFieldDefinition {
     helpText: string;
     name: string;
     referenceName: string;
+    allowedValues: string[];
 }
