@@ -33,4 +33,5 @@ export interface IFieldDefinition {
     name: string;
     referenceName: string;
     allowedValues: string[];
+    isIdentity: boolean;
 }

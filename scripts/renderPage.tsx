@@ -19,6 +19,7 @@ import { Combo, IComboOptions } from "VSS/Controls/Combos";
 import { BaseControl } from "VSS/Controls";
 import { datePickerStrings } from "./datePickerConsts";
 import { TagPicker, NormalPeoplePicker } from "OfficeFabric/components/pickers";
+import { getIdentities } from "./identities";
 
 
 class PageControl extends React.Component<{
@@ -30,6 +31,7 @@ class PageControl extends React.Component<{
     static counter = 0;
     private richEditor: RichEditor;
     private combo: Combo;
+    private changeFiredByThis = false;
     render() {
         let controlValue: JSX.Element;
 
@@ -61,18 +63,18 @@ class PageControl extends React.Component<{
                         }
                         this.richEditor.ready(() => this.richEditor.setValue(fieldValue));
                     }}
-                    ></div>
+                ></div>
             </div>;
         } else if (fieldType === FieldType.Boolean) {
             controlValue = <Toggle
-                    label={labelText}
-                    className="control-value"
-                    title={helpText}
-                    onChanged={value => {
-                        console.log("toggle changed");
-                        onChange(referenceName, value);
-                    }}
-                    checked={fieldValue as boolean}
+                label={labelText}
+                className="control-value"
+                title={helpText}
+                onChanged={value => {
+                    console.log("toggle changed");
+                    onChange(referenceName, value);
+                }}
+                checked={fieldValue as boolean}
             />;
         } else {
             /**
@@ -87,13 +89,15 @@ class PageControl extends React.Component<{
                 <Label title={helpText}>{labelText}</Label>
                 <div
                     ref={elem => {
+                        const component: PageControl = this;
                         if (elem && elem.children.length === 0) {
                             const options: IComboOptions = {
-                                    source: allowedValues,
-                                    change: function() {
-                                        const box: Combo = this;
-                                        onChange(referenceName, box.getValue());
-                                    }
+                                source: allowedValues,
+                                change: function () {
+                                    const box: Combo = this;
+                                    component.changeFiredByThis = true;
+                                    onChange(referenceName, box.getValue());
+                                }
                             };
                             if (allowedValues.length === 0) {
                                 options.mode = "text";
@@ -102,8 +106,23 @@ class PageControl extends React.Component<{
                                 options.type = "date-time";
                             }
                             this.combo = BaseControl.createIn(Combo, elem, options) as Combo;
+                            if (field.isIdentity) {
+                                getIdentities(identities => {
+                                    console.log("updating identities", identities);
+                                    {/*this.combo.setSource(identities);*/}
+                                    while (elem.firstChild) {
+                                        elem.removeChild(elem.firstChild);
+                                    }
+                                    options.source = identities;
+                                    this.combo = BaseControl.createIn(Combo, elem, options) as Combo;
+                                });
+                            }
                         }
-                        this.combo.setText(fieldValueStr, false);
+                        if (this.changeFiredByThis) {
+                            this.changeFiredByThis = false;
+                        } else {
+                            this.combo.setText(fieldValueStr, false);
+                        }
                     }}
                 ></div>
             </div>;
@@ -172,7 +191,7 @@ class PageForm extends React.Component<{
     onFieldChange: (refName: string, value) => void
 }, void> {
     render() {
-        let columns = this.props.form.columns.map( column =>
+        let columns = this.props.form.columns.map(column =>
             <PageColumn
                 column={column}
                 definitions={this.props.definitions}
@@ -181,7 +200,7 @@ class PageForm extends React.Component<{
         );
         return (
             <div className="page-form">
-                <PageHeader form={this.props.form} openEditFormDialog={this.props.openEditFormDialog}/>
+                <PageHeader form={this.props.form} openEditFormDialog={this.props.openEditFormDialog} />
                 <div className="page-columns">
                     {columns}
                 </div>
@@ -201,7 +220,7 @@ class PageHeader extends React.Component<{
                 <PrimaryButton
                     className="open-dialog-button"
                     onClick={this.props.openEditFormDialog}>
-                        {"Customize Page"}
+                    {"Customize Page"}
                 </PrimaryButton>
                 <Label className="form-scope-label">{`Viewing as ${webContext.team.name}`}</Label>
                 <div className="feedback">
@@ -214,10 +233,10 @@ class PageHeader extends React.Component<{
 }
 
 export function renderPage(workItemForm: IPageForm,
-                           definitions: IFieldDefinitions,
-                           values: IFieldValues,
-                           openEditFormDialog: () => void,
-                           onFieldChange: (refName: string, value) => void) {
+    definitions: IFieldDefinitions,
+    values: IFieldValues,
+    openEditFormDialog: () => void,
+    onFieldChange: (refName: string, value) => void) {
     ReactDOM.render(<PageForm
         form={workItemForm}
         definitions={definitions}
