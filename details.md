@@ -7,5 +7,6 @@ Click the "Customize Form" button to bring up the drag and drop customization ex
 ![](img/editPageForm.png)  
 
 # Change Log
+(03/02/17) v1.0.52 Fixes change and focus issue
 (03/01/17) v1.0.44 Identity Pickers and allowed values controls
 (02/24/17) v1.0.1 Initial release

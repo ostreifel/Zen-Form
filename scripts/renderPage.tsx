@@ -9,16 +9,12 @@ import {
     IFieldValues
 } from "./pageContracts";
 import { FieldType } from "TFS/WorkItemTracking/Contracts";
-import { DatePicker, DayOfWeek } from "OfficeFabric/components/DatePicker";
-import { TextField } from "OfficeFabric/components/TextField";
 import { Toggle } from "OfficeFabric/components/Toggle";
 import { Label } from "OfficeFabric/components/Label";
 import { PrimaryButton } from "OfficeFabric/components/Button";
 import { RichEditor, IRichEditorOptions } from "VSS/Controls/RichEditor";
 import { Combo, IComboOptions } from "VSS/Controls/Combos";
 import { BaseControl } from "VSS/Controls";
-import { datePickerStrings } from "./datePickerConsts";
-import { TagPicker, NormalPeoplePicker } from "OfficeFabric/components/pickers";
 import { getIdentities } from "./identities";
 
 
@@ -50,12 +46,12 @@ class PageControl extends React.Component<{
                 <div className="html-value"
                     contentEditable={true}
                     ref={elem => {
-                        if (elem) {
+                        if (elem && (!this.richEditor || !$.contains(elem, this.richEditor.getElement()[0]))) {
+                            console.log("creating richtext editor", referenceName);
                             while (elem.firstChild) {
                                 elem.removeChild(elem.firstChild);
                             }
                             if (this.richEditor) {
-                                console.log("getting richeditor element", referenceName);
                                 this.richEditor.getElement().remove();
                             }
                             const richEditorOpts: IRichEditorOptions = {
@@ -63,11 +59,16 @@ class PageControl extends React.Component<{
                                 change: textArea => {
                                     console.log(textArea);
                                     onChange(referenceName, this.richEditor.getValue());
-                                }
+                                },
+                                fireOnEveryChange: true
                             };
                             this.richEditor = BaseControl.createIn(RichEditor, elem, richEditorOpts) as RichEditor;
                         }
-                        this.richEditor.ready(() => this.richEditor.setValue(fieldValue));
+                        this.richEditor.ready(() => {
+                            if (!this.richEditor.hasFocus()) {
+                                this.richEditor.setValue(fieldValue);
+                            }
+                        });
                     }}
                 ></div>
             </div>;
@@ -96,7 +97,8 @@ class PageControl extends React.Component<{
                 <div
                     ref={elem => {
                         const component: PageControl = this;
-                        if (elem) {
+                        if (elem && (!this.combo || !$.contains(elem, this.combo.getElement()[0]))) {
+                            console.log("creating combo", referenceName);
                             while (elem.firstChild) {
                                 elem.removeChild(elem.firstChild);
                             }
@@ -128,7 +130,6 @@ class PageControl extends React.Component<{
                                 });
                             }
                         }
-                        console.log("getting combo element", referenceName);
                         // Don't react to own fire events
                         if (this.combo.getElement().find(":focus").length === 0) {
                             this.combo.setText(fieldValueStr, false);
