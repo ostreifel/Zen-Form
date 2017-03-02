@@ -1,7 +1,7 @@
 {
     "manifestVersion": 1,
     "id": "customize-team-form",
-    "version": "1.0.44",
+    "version": "1.0.45",
     "name": "Zen Form",
     "scopes": [ "vso.work", "vso.work_write" ],
     "description": "Create team specific form customizations.",
