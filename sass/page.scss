@@ -30,6 +30,12 @@ body.page-body {
                     border: initial;
                     &.focus, &:hover {
                         border: 1px solid lightgray;
+                        .drop {
+                            visibility: initial;
+                        }
+                    }
+                    .drop {
+                        visibility: hidden;
                     }
                 }
                 .control-value {
