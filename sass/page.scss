@@ -28,11 +28,8 @@ body.page-body {
                 .combo {
                     width: 300px;
                     border: initial;
-                    &.focus {
+                    &.focus, &:hover {
                         border: 1px solid lightgray;
-                    }
-                    &:not(.focus) .drop {
-                        display: none;
                     }
                 }
                 .control-value {

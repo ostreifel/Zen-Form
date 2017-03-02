@@ -31,7 +31,6 @@ class PageControl extends React.Component<{
     static counter = 0;
     private richEditor: RichEditor;
     private combo: Combo;
-    private changeFiredByThis = false;
     render() {
         let controlValue: JSX.Element;
 
@@ -51,7 +50,14 @@ class PageControl extends React.Component<{
                 <div className="html-value"
                     contentEditable={true}
                     ref={elem => {
-                        if (elem && elem.children.length === 0) {
+                        if (elem) {
+                            while (elem.firstChild) {
+                                elem.removeChild(elem.firstChild);
+                            }
+                            if (this.richEditor) {
+                                console.log("getting richeditor element", referenceName);
+                                this.richEditor.getElement().remove();
+                            }
                             const richEditorOpts: IRichEditorOptions = {
                                 internal: false,
                                 change: textArea => {
@@ -90,12 +96,14 @@ class PageControl extends React.Component<{
                 <div
                     ref={elem => {
                         const component: PageControl = this;
-                        if (elem && elem.children.length === 0) {
+                        if (elem) {
+                            while (elem.firstChild) {
+                                elem.removeChild(elem.firstChild);
+                            }
                             const options: IComboOptions = {
                                 source: allowedValues,
                                 change: function () {
                                     const box: Combo = this;
-                                    component.changeFiredByThis = true;
                                     onChange(referenceName, box.getValue());
                                 }
                             };
@@ -108,19 +116,21 @@ class PageControl extends React.Component<{
                             this.combo = BaseControl.createIn(Combo, elem, options) as Combo;
                             if (field.isIdentity) {
                                 getIdentities(identities => {
+                                    const value = this.combo.getValue() as string;
                                     console.log("updating identities", identities);
-                                    {/*this.combo.setSource(identities);*/}
                                     while (elem.firstChild) {
                                         elem.removeChild(elem.firstChild);
                                     }
                                     options.source = identities;
+                                    options.value = value;
+                                    delete options.mode;
                                     this.combo = BaseControl.createIn(Combo, elem, options) as Combo;
                                 });
                             }
                         }
-                        if (this.changeFiredByThis) {
-                            this.changeFiredByThis = false;
-                        } else {
+                        console.log("getting combo element", referenceName);
+                        // Don't react to own fire events
+                        if (this.combo.getElement().find(":focus").length === 0) {
                             this.combo.setText(fieldValueStr, false);
                         }
                     }}
