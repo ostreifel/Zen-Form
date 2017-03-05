@@ -236,7 +236,8 @@ class PageHeader extends React.Component<{
                 <Label className="form-scope-label">{`Viewing as ${webContext.team.name}`}</Label>
                 <div className="feedback">
                     <a href={"https://marketplace.visualstudio.com/items?itemName=ottostreifel.customize-team-form"} target={"_blank"}>Review</a>{" | "}
-                    <a href={"https://github.com/ostreifel/zen-form/issues"} target={"_blank"}>Report an issue</a>
+                    <a href={"https://github.com/ostreifel/zen-form/issues"} target={"_blank"}>Report an issue</a>{" | "}
+                    <a href={"mailto:zenform@microsoft.com"} target={"_blank"}>Feedback and Suggestions</a>
                 </div>
             </div>
         );

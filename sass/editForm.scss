@@ -21,13 +21,14 @@ body.edit-page-body {
         }
         .group:not(.add) {
             margin-bottom: 40px;
-            border: 1px solid #f4f4f4;
+            border: 1px solid #969696;
             > div {
                 padding: 2px;
             }
             .group-header {
                 overflow: hidden;
                 background-color: #FBFBFB;
+                border-bottom: 1px #969696 solid;
                 .group-label {
                     float: left;
                     margin-right: 10px;
