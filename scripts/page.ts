@@ -8,7 +8,7 @@ import {
 import {
     IWorkItemFormService
 } from "TFS/WorkItemTracking/Services";
-import { WorkItemType, WorkItemField } from "TFS/WorkItemTracking/Contracts";
+import { WorkItemType } from "TFS/WorkItemTracking/Contracts";
 import { IPageForm, IFieldValues, IFieldDefinitions } from "./pageContracts";
 import { renderPage } from "./renderPage";
 import { openEditFormDialog } from "./openEditFormDialog";
@@ -23,6 +23,7 @@ export class Page implements IWorkItemNotificationListener {
                         readonly fieldDefinitions: IFieldDefinitions) { }
     private onFormChanged(form: IPageForm) {
         saveForm(form, this.wit).then(form => {
+            this.form = form;
             this.renderPage(form);
         });
     }

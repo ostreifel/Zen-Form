@@ -9,7 +9,7 @@ import {
     IFieldValues
 } from "./pageContracts";
 import { FieldType } from "TFS/WorkItemTracking/Contracts";
-import { Toggle } from "OfficeFabric/components/Toggle";
+import { Checkbox } from "OfficeFabric/components/CheckBox";
 import { Label } from "OfficeFabric/components/Label";
 import { PrimaryButton } from "OfficeFabric/components/Button";
 import { RichEditor, IRichEditorOptions } from "VSS/Controls/RichEditor";
@@ -73,13 +73,13 @@ class PageControl extends React.Component<{
                 ></div>
             </div>;
         } else if (fieldType === FieldType.Boolean) {
-            controlValue = <Toggle
+            controlValue = <Checkbox
                 label={labelText}
                 className="control-value"
                 title={helpText}
-                onChanged={value => {
+                onChange={value => {
                     console.log("toggle changed");
-                    onChange(referenceName, value);
+                    onChange(referenceName, value.target.checked);
                 }}
                 checked={fieldValue as boolean}
             />;
