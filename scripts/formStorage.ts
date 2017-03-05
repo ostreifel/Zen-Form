@@ -17,7 +17,10 @@ function getFormId(wit: WorkItemType) {
 export function getForm(wit: WorkItemType): IPromise<IPageForm> {
     const formId = getFormId(wit);
     return VSS.getService(VSS.ServiceIds.ExtensionData).then((dataService: IExtensionDataService) => {
-        return dataService.getDocument(formCollection, formId).then(doc => doc, (error: TfsError) => {
+        return dataService.getDocument(formCollection, formId).then(doc => {
+            sanitizeForm(wit, doc);
+            return doc;
+        }, (error: TfsError) => {
             console.log("error getting page form", error);
             // If collection has not been created yet;
             if (Number(error.status) === 404) {
@@ -27,30 +30,7 @@ export function getForm(wit: WorkItemType): IPromise<IPageForm> {
     });
 }
 
-function fromOobForm(wit: WorkItemType): IPageForm {
-    const xmlForm = $($.parseXML(wit.xmlForm));
-    const firstPage = xmlForm.find("Tab").first();
-    const columns = firstPage.find("Column[PercentWidth!=100]").filter((i, c) => $(c).find("Column[PercentWidth!=100]").length === 0 );
-    const form: IPageForm = {
-        version: 1,
-        id: getFormId(wit),
-        __etag: -1,
-        columns: $.map(columns, column => {
-            return {
-                groups: $.map($(column).find("Group[Label]"), (group: Node) => {
-                    return {
-                        label: group.attributes["Label"].value,
-                        controls: $.map($(group).find("Control"), (control: Node) => {
-                            return {
-                                label: control.attributes["Label"].value,
-                                referenceName: control.attributes["FieldName"].value
-                            };
-                        })
-                    };
-                })
-            };
-        })
-    };
+function sanitizeForm(wit: WorkItemType, form: IPageForm): void {
     const validFields = {};
     for (let field of wit.fieldInstances) {
         validFields[field.referenceName] = void 0;
@@ -79,6 +59,33 @@ function fromOobForm(wit: WorkItemType): IPageForm {
             form.columns.splice(i, 1);
         }
     }
+}
+
+function fromOobForm(wit: WorkItemType): IPageForm {
+    const xmlForm = $($.parseXML(wit.xmlForm));
+    const firstPage = xmlForm.find("Tab").first();
+    const columns = firstPage.find("Column[PercentWidth!=100]").filter((i, c) => $(c).find("Column[PercentWidth!=100]").length === 0 );
+    const form: IPageForm = {
+        version: 1,
+        id: getFormId(wit),
+        __etag: -1,
+        columns: $.map(columns, column => {
+            return {
+                groups: $.map($(column).find("Group[Label]"), (group: Node) => {
+                    return {
+                        label: group.attributes["Label"].value as string,
+                        controls: $.map($(group).find("Control"), (control: Node) => {
+                            return {
+                                label: control.attributes["Label"].value as string,
+                                referenceName: control.attributes["FieldName"].value as string
+                            };
+                        })
+                    };
+                })
+            };
+        })
+    };
+    sanitizeForm(wit, form);
     console.log("using converted form", form);
     return form;
 }

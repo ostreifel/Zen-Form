@@ -80,7 +80,7 @@ function createFieldDefinitions(service: IWorkItemFormService,
 
         const allowedValuesPromises = wit.fieldInstances.map(field =>
             service.getAllowedFieldValues(field.referenceName).then(values =>
-                allowedValues[field.referenceName] = values
+                allowedValues[field.referenceName] = values.map(v => String(v))
             )
         );
         return Q.all(allowedValuesPromises).then(() => {

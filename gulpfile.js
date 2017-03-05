@@ -71,7 +71,7 @@ gulp.task('package', ['webpack'], () => {
     const rootArg = `--root ${contentFolder}`;
     const manifestsArg = `--manifests ..\\vss-extension.json`;
 
-    exec(`${path.join(__dirname, "node_modules", ".bin", "tfx.cmd")} extension create ${rootArg} ${overridesArg} ${manifestsArg} --rev-version`,
+    exec(`tfx extension create ${rootArg} ${overridesArg} ${manifestsArg} --rev-version`,
         (err, stdout, stderr) => {
             if (err) {
                 console.log(err);
