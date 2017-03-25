@@ -12,10 +12,12 @@ import { FieldType } from "TFS/WorkItemTracking/Contracts";
 import { Checkbox } from "OfficeFabric/components/CheckBox";
 import { Label } from "OfficeFabric/components/Label";
 import { PrimaryButton } from "OfficeFabric/components/Button";
+import { DatePicker, DayOfWeek } from "OfficeFabric/components/DatePicker";
 import { RichEditor, IRichEditorOptions } from "VSS/Controls/RichEditor";
 import { Combo, IComboOptions } from "VSS/Controls/Combos";
 import { BaseControl } from "VSS/Controls";
 import { getIdentities } from "./identities";
+import { datePickerStrings } from "./datePickerConstants";
 
 
 class PageControl extends React.Component<{
@@ -83,6 +85,15 @@ class PageControl extends React.Component<{
                 }}
                 checked={fieldValue as boolean}
             />;
+        } else if (fieldType === FieldType.DateTime) {
+            controlValue = <DatePicker
+                                label={labelText}
+                                firstDayOfWeek={ DayOfWeek.Sunday }
+                                strings={ datePickerStrings }
+                                onSelectDate={value => onChange(referenceName, value)}
+                                allowTextInput={true}
+                                value={typeof fieldValue === undefined || fieldValue === null ? null : new Date(fieldValue)}
+                            />;
         } else {
             /**
              * TODO more field types here
@@ -111,9 +122,6 @@ class PageControl extends React.Component<{
                             };
                             if (allowedValues.length === 0) {
                                 options.mode = "text";
-                            }
-                            if (fieldType === FieldType.DateTime) {
-                                options.type = "date-time";
                             }
                             this.combo = BaseControl.createIn(Combo, elem, options) as Combo;
                             if (field.isIdentity) {
