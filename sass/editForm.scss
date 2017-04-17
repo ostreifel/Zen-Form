@@ -1,88 +1,113 @@
+
+$focusColor: #f4f4f4;
+$defaultBorder: 1px solid #969696;
+$lightBorder: 1px solid $focusColor;
+
 body.edit-page-body {
     overflow: auto;
 }
-.edit-page-form {
-    .column {
-        float: left;
-        margin: 0 10px;
-        button.ms-Button.ms-Button--default {
-            min-width: initial;
+.edit-form {
+    .menu {
+        display: flex;
+        .menu-item {
+            background-color: transparent;
+            border: none;
+            border-left: $defaultBorder;
+            border-top: $defaultBorder;
+            border-bottom: $defaultBorder;
+            &:last-child {
+                border-right: $defaultBorder;
+            }
+
+            &:focus, &:hover {
+                background-color: $focusColor;
+                text-decoration: underline;
+            }
         }
-        .column-header {
-            label {
-                float: left;
-                margin-right: 10px;
-                margin-bottom: 5px;
+    }
+    .edit-page-form {
+        .column {
+            float: left;
+            margin: 0 10px;
+            button.ms-Button.ms-Button--default {
+                min-width: initial;
             }
-            button {
-                float: right;
-            }
-            overflow: hidden;
-        }
-        .group:not(.add) {
-            margin-bottom: 40px;
-            border: 1px solid #969696;
-            > div {
-                padding: 2px;
-            }
-            .group-header {
-                overflow: hidden;
-                background-color: #FBFBFB;
-                border-bottom: 1px #969696 solid;
-                .group-label {
+            .column-header {
+                label {
                     float: left;
                     margin-right: 10px;
-                    background-color: initial;
-                    border: initial;
-                    &:hover {
-                        background-color: #f4f4f4;
-                    }
-                    &:focus {
-                        border: 1px solid #f4f4f4
-                    }
-                    &:active {
-                        background-color: #005a9e;
-                    }
+                    margin-bottom: 5px;
                 }
                 button {
                     float: right;
                 }
-            }
-            button.remove {
-                background-color: initial;
-                border: initial;
-                &:hover {
-                    background-color: #f4f4f4;
-                }
-                &:focus {
-                    border: 1px solid #f4f4f4
-                }
-                &:active {
-                    background-color: #005a9e;
-                }
-            }
-            .control:not(.add) {
                 overflow: hidden;
-                margin-bottom: 5px;
-                &:hover {
-                    background-color: #eff6fc;
+            }
+            .group:not(.add) {
+                margin-bottom: 40px;
+                border: $defaultBorder;
+                > div {
+                    padding: 2px;
                 }
-                button.control-button {
-                    margin-right: 10px;
+                .group-header {
+                    overflow: hidden;
+                    background-color: #FBFBFB;
+                    border-bottom: $defaultBorder;
+                    .group-label {
+                        float: left;
+                        margin-right: 10px;
+                        background-color: initial;
+                        border: initial;
+                        &:hover {
+                            background-color: $focusColor;
+                        }
+                        &:focus {
+                            border: $lightBorder
+                        }
+                        &:active {
+                            background-color: #005a9e;
+                        }
+                    }
+                    button {
+                        float: right;
+                    }
+                }
+                button.remove {
                     background-color: initial;
-                    border: none;
+                    border: initial;
                     &:hover {
-                        background-color: #f4f4f4;
+                        background-color: $focusColor;
                     }
                     &:focus {
-                        border: 1px solid #f4f4f4
+                        border: $lightBorder
                     }
                     &:active {
                         background-color: #005a9e;
                     }
                 }
-                button.control-remove {
-                    float: right;
+                .control:not(.add) {
+                    overflow: hidden;
+                    margin-bottom: 5px;
+                    &:hover {
+                        background-color: #eff6fc;
+                    }
+                    button.control-button {
+                        margin-right: 10px;
+                        background-color: initial;
+                        border: none;
+                        &:hover {
+                            background-color: $focusColor;
+                        }
+                        &:focus {
+                            border: $lightBorder
+                        }
+                        &:active {
+                            background-color: #005a9e;
+                        }
+                    }
+                    button.control-remove {
+                        float: right;
+                    }
                 }
             }
         }

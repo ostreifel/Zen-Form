@@ -14,7 +14,7 @@ const form = config.form;
 const definitionsMap = config.definitions;
 const definitionsArr = Object.keys(config.definitions).map(k => config.definitions[k]).sort((a, b) => a.name.localeCompare(b.name));
 
-class Control extends React.Component<{options: IControlProperties }, {showDialog?: boolean, dragging?: boolean, label?: string, refName?: string}> {
+class Control extends React.Component<{ options: IControlProperties }, { showDialog?: boolean, dragging?: boolean, label?: string, refName?: string }> {
     constructor() {
         super();
         this.state = {};
@@ -62,34 +62,34 @@ class Control extends React.Component<{options: IControlProperties }, {showDialo
                         const opts = this.props.options;
                         form.columns[opts.columnIndex].groups[opts.groupIndex].controls.splice(opts.controlIndex, 1);
                         renderEditPage();
-                    }}/>
+                    }} />
 
                 <Dialog
-                    isOpen={ this.state.showDialog }
-                    type={ DialogType.normal }
-                    onDismiss={ () => this._closeDialog() }
+                    isOpen={this.state.showDialog}
+                    type={DialogType.normal}
+                    onDismiss={() => this._closeDialog()}
                     title="Edit Control"
-                    isBlocking={ false }
+                    isBlocking={false}
                 >
                     <TextField className="control-label"
                         label="Label"
-                        onChanged={(newValue) => this.setState($.extend(this.state, {label: newValue}))}
+                        onChanged={(newValue) => this.setState($.extend(this.state, { label: newValue }))}
                         placeholder="Enter a label"
                         value={this.state.label} />
                     <Dropdown className="control-field"
-                        options={definitionsArr.map(d => {return { key: d.referenceName, text: d.name }; })}
+                        options={definitionsArr.map(d => { return { key: d.referenceName, text: d.name }; })}
                         selectedKey={this.state.refName}
                         onChanged={(item) => {
                             const fieldRefName = String(item.key);
                             const label = definitionsMap[fieldRefName].name;
-                            this.setState($.extend(this.state, {refName: fieldRefName, label: label}));
+                            this.setState($.extend(this.state, { refName: fieldRefName, label: label }));
                         }}
                         label="Backing field"
-                        />
+                    />
 
                     <DialogFooter>
-                        <Button buttonType={ ButtonType.primary } onClick={ () => this._saveControl() }>Save</Button>
-                        <Button onClick={ () => this._closeDialog() }>Cancel</Button>
+                        <Button buttonType={ButtonType.primary} onClick={() => this._saveControl()}>Save</Button>
+                        <Button onClick={() => this._closeDialog()}>Cancel</Button>
                     </DialogFooter>
                 </Dialog>
             </div>
@@ -105,24 +105,25 @@ class Control extends React.Component<{options: IControlProperties }, {showDialo
         renderEditPage();
     }
     private _closeDialog() {
-        this.setState({showDialog: false});
+        this.setState({ showDialog: false });
     }
     private _showDialog() {
         this.setState({
             showDialog: true,
             label: this.props.options.control.label,
-            refName: this.props.options.control.referenceName});
+            refName: this.props.options.control.referenceName
+        });
     }
 }
 
-class Group extends React.Component<{options: IGroupProperties }, {showDialog: boolean, label?: string}> {
+class Group extends React.Component<{ options: IGroupProperties }, { showDialog: boolean, label?: string }> {
     constructor() {
         super();
-        this.state = {showDialog: false};
+        this.state = { showDialog: false };
     }
     render() {
         const controls = this.props.options.group.controls.map((control, controlIndex) =>
-            <Control options={$.extend({control, controlIndex}, this.props.options)}/>
+            <Control options={$.extend({ control, controlIndex }, this.props.options)} />
         );
         controls.push(<div className="control add">
             <Button
@@ -190,21 +191,21 @@ class Group extends React.Component<{options: IGroupProperties }, {showDialog: b
                         onClick={() => this._showDialog()}
                     >{this.props.options.group.label}</Button>
                     <Dialog
-                        isOpen={ this.state.showDialog }
-                        type={ DialogType.normal }
-                        onDismiss={ () => this._closeDialog() }
+                        isOpen={this.state.showDialog}
+                        type={DialogType.normal}
+                        onDismiss={() => this._closeDialog()}
                         title="Edit Control"
-                        isBlocking={ false }
+                        isBlocking={false}
                     >
                         <TextField className="group-label-input"
                             label="Label"
-                            onChanged={(newValue) => this.setState($.extend(this.state, {label: newValue}))}
+                            onChanged={(newValue) => this.setState($.extend(this.state, { label: newValue }))}
                             placeholder="Enter a label"
                             value={this.state.label} />
 
                         <DialogFooter>
-                            <Button buttonType={ ButtonType.primary } onClick={ () => this._saveGroup() }>Save</Button>
-                            <Button onClick={ () => this._closeDialog() }>Cancel</Button>
+                            <Button buttonType={ButtonType.primary} onClick={() => this._saveGroup()}>Save</Button>
+                            <Button onClick={() => this._closeDialog()}>Cancel</Button>
                         </DialogFooter>
                     </Dialog>
                     <Button
@@ -216,17 +217,17 @@ class Group extends React.Component<{options: IGroupProperties }, {showDialog: b
                             const opts = this.props.options;
                             form.columns[opts.columnIndex].groups.splice(opts.groupIndex, 1);
                             renderEditPage();
-                        }}/>
+                        }} />
                 </div>
                 {controls}
             </div>
         );
     }
     private _closeDialog() {
-        this.setState({showDialog: false});
+        this.setState({ showDialog: false });
     }
     private _showDialog() {
-        this.setState({showDialog: true, label: this.props.options.group.label});
+        this.setState({ showDialog: true, label: this.props.options.group.label });
     }
     private _saveGroup() {
         const opts = this.props.options;
@@ -235,10 +236,10 @@ class Group extends React.Component<{options: IGroupProperties }, {showDialog: b
         renderEditPage();
     }
 }
-class Column extends React.Component<{options: IColumnProperties }, void> {
+class Column extends React.Component<{ options: IColumnProperties }, void> {
     render() {
         const groups = this.props.options.column.groups.map((group, groupIndex) =>
-            <Group options={$.extend({group, groupIndex}, this.props.options)}/>
+            <Group options={$.extend({ group, groupIndex }, this.props.options)} />
         );
         groups.push(<div className="group add">
             <Button
@@ -281,7 +282,7 @@ class Column extends React.Component<{options: IColumnProperties }, void> {
                         onClick={() => {
                             form.columns.splice(this.props.options.columnIndex, 1);
                             renderEditPage();
-                        }}/>
+                        }} />
                 </div>
                 {groups}
             </div>
@@ -289,11 +290,11 @@ class Column extends React.Component<{options: IColumnProperties }, void> {
     }
 }
 
-class PageForm extends React.Component<{form: IPageForm}, void> {
+class PageForm extends React.Component<{ form: IPageForm }, void> {
     render() {
         console.log("Rendering form", this.props.form);
         const columns: JSX.Element[] = this.props.form.columns.map((column, columnIndex) =>
-            <Column options={{column, columnIndex}} />
+            <Column options={{ column, columnIndex }} />
         );
         columns.push(
             <div className="column add">
@@ -302,17 +303,46 @@ class PageForm extends React.Component<{form: IPageForm}, void> {
                     icon="Add"
                     title="Add Column"
                     onClick={() => {
-                        form.columns.push({groups: []});
+                        form.columns.push({ groups: [] });
                         renderEditPage();
                     }}
-                    />
+                />
             </div>);
         return <div className="edit-page-form">{columns}</div>;
     }
 }
 
+class MenuItem extends React.Component<{ action: () => void }, void> {
+    render() {
+        return <button className="menu-item"
+            onClick={() => this.props.action}
+        >
+            {this.props.children}
+        </button>;
+    }
+}
+
+class MenuBar extends React.Component<void, void> {
+    render() {
+        return <div className="menu">
+            <MenuItem action={() => console.log("TODO reset")}>Reset to default</MenuItem>
+            <MenuItem action={() => console.log("TODO import")}>Import</MenuItem>
+            <MenuItem action={() => console.log("TODO export")}>Export</MenuItem>
+        </div>;
+    }
+}
+
+class EditForm extends React.Component<{ form: IPageForm }, void> {
+    render() {
+        return <div className="edit-form">
+            <MenuBar />
+            <PageForm form={this.props.form} />
+        </div>;
+    }
+}
+
 function renderEditPage() {
-    ReactDOM.render(<PageForm form={form}/>, document.getElementById("edit-form-wrapper"));
+    ReactDOM.render(<EditForm form={form} />, document.getElementById("edit-form-wrapper"));
 }
 
 const getForm = () => form;
