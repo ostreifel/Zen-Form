@@ -8,7 +8,7 @@ import { Label } from "OfficeFabric/components/Label";
 import { TextField } from "OfficeFabric/components/TextField";
 import { Dropdown } from "OfficeFabric/components/Dropdown";
 import { Dialog, DialogType, DialogFooter } from "OfficeFabric/components/Dialog";
-import { fromOobForm } from "./formStorage";
+import { fromOobForm, sanitizeForm } from "./formStorage";
 
 const config: IEditFormContext = VSS.getConfiguration();
 let form = config.form;
@@ -331,8 +331,40 @@ class MenuBar extends React.Component<void, void> {
                 form = fromOobForm(wit);
                 renderEditPage();
             }}>Reset to default</MenuItem>
-            <MenuItem action={() => console.log("TODO import")}><input type="file" hidden />Import</MenuItem>
-            <MenuItem action={() => console.log("TODO export")}>Export</MenuItem>
+            <MenuItem action={() => {
+                $(".file-import-input").click();
+            }}>
+                <input type="file" accept=".witform" hidden className="file-import-input" onChange={(e) => {
+                    const files = e.target.files;
+                    if (!files || files.length === 0) {
+                        console.log("No file selected");
+                    }
+                    const reader = new FileReader();
+                    reader.onload = () => {
+                        const inputForm: IPageForm = JSON.parse(reader.result);
+                        sanitizeForm(wit, inputForm);
+                        form = inputForm;
+                        renderEditPage();
+                    };
+                    reader.readAsText(files[0]);
+                    e.target.value = "";
+                }} />
+                Import
+            </MenuItem>
+            <MenuItem action={() => {
+                const a = document.createElement("a");
+                const formCopy = {...form};
+                delete formCopy.id;
+                delete formCopy.__etag;
+                const documentStr = JSON.stringify(formCopy);
+                const blob = new Blob([documentStr], { type: "text/plain;charset=utf-8;" });
+                a.href = window.URL.createObjectURL(blob);
+                let name = `${VSS.getWebContext().project.name}.${wit.name}.witform`;
+                a.download = name;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            }}>Export</MenuItem>
         </div>;
     }
 }

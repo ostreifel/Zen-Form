@@ -30,7 +30,8 @@ export function getForm(wit: WorkItemType): IPromise<IPageForm> {
     });
 }
 
-function sanitizeForm(wit: WorkItemType, form: IPageForm): void {
+export function sanitizeForm(wit: WorkItemType, form: IPageForm): void {
+    form.id = getFormId(wit);
     const validFields = {};
     for (let field of wit.fieldInstances) {
         validFields[field.referenceName] = void 0;
