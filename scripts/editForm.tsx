@@ -8,10 +8,12 @@ import { Label } from "OfficeFabric/components/Label";
 import { TextField } from "OfficeFabric/components/TextField";
 import { Dropdown } from "OfficeFabric/components/Dropdown";
 import { Dialog, DialogType, DialogFooter } from "OfficeFabric/components/Dialog";
+import { fromOobForm } from "./formStorage";
 
 const config: IEditFormContext = VSS.getConfiguration();
-const form = config.form;
+let form = config.form;
 const definitionsMap = config.definitions;
+const wit = config.wit;
 const definitionsArr = Object.keys(config.definitions).map(k => config.definitions[k]).sort((a, b) => a.name.localeCompare(b.name));
 
 class Control extends React.Component<{ options: IControlProperties }, { showDialog?: boolean, dragging?: boolean, label?: string, refName?: string }> {
@@ -315,7 +317,7 @@ class PageForm extends React.Component<{ form: IPageForm }, void> {
 class MenuItem extends React.Component<{ action: () => void }, void> {
     render() {
         return <button className="menu-item"
-            onClick={() => this.props.action}
+            onClick={() => this.props.action()}
         >
             {this.props.children}
         </button>;
@@ -325,8 +327,11 @@ class MenuItem extends React.Component<{ action: () => void }, void> {
 class MenuBar extends React.Component<void, void> {
     render() {
         return <div className="menu">
-            <MenuItem action={() => console.log("TODO reset")}>Reset to default</MenuItem>
-            <MenuItem action={() => console.log("TODO import")}>Import</MenuItem>
+            <MenuItem action={() => {
+                form = fromOobForm(wit);
+                renderEditPage();
+            }}>Reset to default</MenuItem>
+            <MenuItem action={() => console.log("TODO import")}><input type="file" hidden />Import</MenuItem>
             <MenuItem action={() => console.log("TODO export")}>Export</MenuItem>
         </div>;
     }

@@ -18,9 +18,9 @@ export class Page implements IWorkItemNotificationListener {
     private form?: IPageForm;
     /** For use by page constructor */
     constructor(readonly container: JQuery,
-                        readonly service: IWorkItemFormService,
-                        readonly wit: WorkItemType,
-                        readonly fieldDefinitions: IFieldDefinitions) { }
+        readonly service: IWorkItemFormService,
+        readonly wit: WorkItemType,
+        readonly fieldDefinitions: IFieldDefinitions) { }
     private onFormChanged(form: IPageForm) {
         saveForm(form, this.wit).then(form => {
             this.form = form;
@@ -40,21 +40,25 @@ export class Page implements IWorkItemNotificationListener {
     public onFieldChanged(fieldChangedArgs: IWorkItemFieldChangedArgs): void {
         console.log("fields changed", fieldChangedArgs);
         this.renderPage(this.form);
-     }
+    }
     public onSaved(savedEventArgs: IWorkItemChangedArgs): void { }
     public onRefreshed(refreshEventArgs: IWorkItemChangedArgs): void {
         getForm(this.wit).then(form => {
             this.form = form;
             this.renderPage(form);
         });
-     }
+    }
     public onReset(undoEventArgs: IWorkItemChangedArgs): void {
         this.renderPage(this.form);
-     }
+    }
     public onUnloaded(unloadedEventArgs: IWorkItemChangedArgs): void { }
 
     private openDialog(form: IPageForm) {
-        openEditFormDialog(form, this.fieldDefinitions, (form) => this.onFormChanged(form));
+        openEditFormDialog({
+            form,
+            definitions: this.fieldDefinitions,
+            wit: this.wit
+        }, (form) => this.onFormChanged(form));
     }
     private getWitFieldValues(): IPromise<IFieldValues> {
         return this.service.getFieldValues(Object.keys(this.fieldDefinitions));

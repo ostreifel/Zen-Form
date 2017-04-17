@@ -1,8 +1,9 @@
 import { IPageForm, IFieldDefinitions } from "./pageContracts";
 import { IEditFormContext, IEditFormCallbacks } from "./editFormContracts";
 import * as Q from "q";
+import { WorkItemType } from "TFS/WorkItemTracking/Contracts";
 
-export function openEditFormDialog(form: IPageForm, definitions: IFieldDefinitions, onFormChanged: (form: IPageForm) => void) {
+export function openEditFormDialog(editContext: IEditFormContext, onFormChanged: (form: IPageForm) => void) {
     VSS.getService(VSS.ServiceIds.Dialog).then(function (dialogService: IHostDialogService) {
         let getForm = () => {
             console.log("Get form not set");
@@ -25,13 +26,9 @@ export function openEditFormDialog(form: IPageForm, definitions: IFieldDefinitio
             resizable: true
         };
         const extInfo = VSS.getExtensionContext();
-        const options: IEditFormContext = {
-            form,
-            definitions
-        };
 
         const contentContribution = `${extInfo.publisherId}.${extInfo.extensionId}.edit-form`;
-        dialogService.openDialog(contentContribution, dialogOptions, options).then(dialog => {
+        dialogService.openDialog(contentContribution, dialogOptions, editContext).then(dialog => {
             externalDialog = dialog;
             dialog.getContributionInstance("edit-form").then((callbacks: IEditFormCallbacks) => {
                 dialog.updateOkButton(true);

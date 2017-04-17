@@ -61,7 +61,7 @@ function sanitizeForm(wit: WorkItemType, form: IPageForm): void {
     }
 }
 
-function fromOobForm(wit: WorkItemType): IPageForm {
+export function fromOobForm(wit: WorkItemType): IPageForm {
     const xmlForm = $($.parseXML(wit.xmlForm));
     const firstPage = xmlForm.find("Tab").first();
     const columns = firstPage.find("Column[PercentWidth!=100]").filter((i, c) => $(c).find("Column[PercentWidth!=100]").length === 0 );
