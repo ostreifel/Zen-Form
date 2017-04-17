@@ -7,10 +7,10 @@ const formCollection = "custom-form-collection2";
 function getFormId(wit: WorkItemType) {
     const webContext = VSS.getWebContext();
     const projId = webContext.project.id;
-    const teamId = webContext.team.id;
+    const userId = webContext.user.id;
     const witId = wit.name;
 
-    return `[${projId}][${teamId}][${witId}]`;
+    return `[${userId}][${projId}][${witId}]`;
 }
 
 // TODO accept params to specify scope
