@@ -2,6 +2,7 @@
 $focusColor: #f4f4f4;
 $defaultBorder: 1px solid #969696;
 $lightBorder: 1px solid $focusColor;
+$dragOverColor: #7cbcf1;
 
 body.edit-page-body {
     overflow: auto;
@@ -53,6 +54,9 @@ body.edit-page-body {
                     overflow: hidden;
                     background-color: #FBFBFB;
                     border-bottom: $defaultBorder;
+                    &.control-drag-over {
+                        border-bottom: 30px solid $dragOverColor;
+                    }
                     .group-label {
                         float: left;
                         margin-right: 10px;
@@ -90,6 +94,9 @@ body.edit-page-body {
                     margin-bottom: 5px;
                     &:hover {
                         background-color: #eff6fc;
+                    }
+                    &.control-drag-over {
+                        border-bottom: 30px solid $dragOverColor;
                     }
                     button.control-button {
                         margin-right: 10px;
